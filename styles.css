@@ -8,6 +8,10 @@
   padding: 0;
 }
 
+.page-link {
+  display: inline;
+}
+
 .header {
   color: white;
   background: black;
