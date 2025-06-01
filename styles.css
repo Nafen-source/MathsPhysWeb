@@ -3,5 +3,11 @@
 }
 
 .header {
+  color: white;
+  background: black;
+}
+
+.footer {
+  color: white;
   background: black;
 }
