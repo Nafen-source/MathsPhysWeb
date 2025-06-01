@@ -28,10 +28,10 @@ li {
   padding: 2%;
 }
 
-.sect {
+section {
   color: black;
   background: white;
-  margin: 10%;
+  margin: 1% 0 0 5%;
 }
 
 .footer {
