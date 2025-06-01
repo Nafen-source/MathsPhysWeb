@@ -10,9 +10,18 @@
 .header {
   color: white;
   background: black;
+  margin: 0;
+  padding: 0;
+}
+
+.sect {
+  background: white;
+  margin: 10%;
 }
 
 .footer {
   color: white;
   background: black;
+  margin: 0;
+  padding: 0;
 }
