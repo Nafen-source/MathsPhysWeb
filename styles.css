@@ -14,11 +14,16 @@
   height: 10px;
 }
 
+.links {
+  display: flex;
+  flex-direction: row;
+}
+
 .header {
   color: white;
   background: black;
   margin: 0;
-  padding: 20px;
+  padding: 10%;
 }
 
 .sect {
