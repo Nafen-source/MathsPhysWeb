@@ -8,6 +8,17 @@
   padding: 0;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+li {
+  display: inline-block;
+  margin: 0 20px 0 0;
+}
+
 .page-link {
   display: inline-block;
   width: 100px;
