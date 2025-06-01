@@ -9,7 +9,9 @@
 }
 
 .page-link {
-  display: inline;
+  display: inline-block;
+  width: 100px;
+  height: 10px;
 }
 
 .header {
