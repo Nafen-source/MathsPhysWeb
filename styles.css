@@ -19,12 +19,6 @@ li {
   margin: 0 20px 0 0;
 }
 
-.page-link {
-  display: inline-block;
-  width: 100px;
-  height: 10px;
-}
-
 .links {
   display: flex;
   flex-direction: row;
