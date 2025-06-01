@@ -2,7 +2,7 @@
   font-family: "Times New Roman", Times, serif;
 }
 
-body {
+.body {
   background: white;
   margin: 0;
   padding: 0;
@@ -38,7 +38,7 @@ section {
   margin: 1% 0 0 5%;
 }
 
-footer {
+.footer {
   color: white;
   background: black;
   margin: 0;
