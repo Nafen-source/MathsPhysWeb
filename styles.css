@@ -41,6 +41,15 @@ a.nav-bar:link, a.nav-bar:visited {
   display: inline-block;
 }
 
+a.nav-bar:hover {
+  background-color: black;
+  color: grey;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
 section {
   color: black;
   background: white;
