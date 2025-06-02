@@ -61,7 +61,8 @@ a.nav-bar:hover {
 section {
   color: black;
   background: white;
-  margin: 1% 0 0 5%;
+  margin: 1% 0 0 3%;
+  padding: 0 3% 0 2%
 }
 
 .footer {
