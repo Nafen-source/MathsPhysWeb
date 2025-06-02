@@ -61,7 +61,7 @@ a.nav-bar:hover {
   display: inline-block;
 }
 
-section {
+.content {
   color: black;
   background: white;
   opacity: 1;
