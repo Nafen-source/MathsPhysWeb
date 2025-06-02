@@ -3,7 +3,8 @@
 }
 
 .body {
-  background: white;
+  background: url('BackgroundCell1.svg');
+  background-size: cover;
   margin: 0;
   padding: 0;
   min-height: 100vh;
