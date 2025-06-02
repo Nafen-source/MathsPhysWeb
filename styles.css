@@ -15,7 +15,7 @@ body {
 .SMA-background {
   background: url('BackgroundCell1.svg');
   background-size: 100%;
-  opacity: 20%;
+  opacity: 0.2;
 }
 
 ul {
