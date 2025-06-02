@@ -3,7 +3,7 @@
 }
 
 body {
-  background: white;
+  background: url('BackgroundCell1.svg');
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -12,11 +12,7 @@ body {
   flex-direction: column;
 }
 
-.SMA-background {
-  background: url('BackgroundCell1.svg');
-  background-size: 100%;
-  opacity: 0.2;
-}
+
 
 ul {
   margin: 0;
