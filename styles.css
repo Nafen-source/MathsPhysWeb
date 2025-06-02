@@ -2,18 +2,6 @@
   font-family: "Times New Roman", Times, serif;
 }
 
-.content::before {
-  background: url('BackgroundCell1.svg');
-  background-size: 50%;
-  margin: 0;
-  padding: 0;
-  opacity: 0.2;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -67,6 +55,18 @@ a.nav-bar:hover {
   opacity: 1;
   margin: 1% 3% 0 3%;
   padding: 0 3% 0 2%;
+}
+
+.content::before {
+  background: url('BackgroundCell1.svg');
+  background-size: 30%;
+  margin: 0;
+  padding: 0;
+  opacity: 0.2;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 .footer {
