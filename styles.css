@@ -2,12 +2,6 @@
   font-family: "Times New Roman", Times, serif;
 }
 
-.SMA-background {
-  background: url('BackgroundCell1.svg');
-  background-size: 100%;
-  opacity: 0.2;
-}
-
 body {
   background: white;
   margin: 0;
@@ -16,6 +10,12 @@ body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+.SMA-background {
+  background: url('BackgroundCell1.svg');
+  background-size: 100%;
+  opacity: 0.2;
 }
 
 ul {
