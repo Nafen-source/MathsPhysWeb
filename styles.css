@@ -50,14 +50,16 @@ a.nav-bar:hover {
 }
 
 .content {
-  color: black;
-  background: white;
-  opacity: 1;
-  margin: 1% 3% 0 3%;
-  padding: 0 3% 0 2%;
+  position: relative; 
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .content::before {
+  content: "";
   background: url('BackgroundCell1.svg');
   background-size: 30%;
   margin: 0;
@@ -67,6 +69,14 @@ a.nav-bar:hover {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+section {
+  color: black;
+  background: white;
+  opacity: 1;
+  margin: 1% 3% 0 3%;
+  padding: 0 3% 0 2%;
 }
 
 .footer {
