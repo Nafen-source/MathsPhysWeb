@@ -4,7 +4,7 @@
 
 .body {
   background: url('BackgroundCell1.svg');
-  background-size: cover;
+  background-size: 30%;
   margin: 0;
   padding: 0;
   min-height: 100vh;
