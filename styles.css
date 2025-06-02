@@ -72,6 +72,7 @@ a.nav-bar:hover {
 }
 
 section {
+  position: relative;
   color: black;
   background: white;
   opacity: 1;
