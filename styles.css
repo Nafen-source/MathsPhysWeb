@@ -2,7 +2,13 @@
   font-family: "Times New Roman", Times, serif;
 }
 
-body {
+.SMA-background {
+  background: url('BackgroundCell1.svg');
+  background-size: 100%;
+  opacity: 0.2;
+}
+
+.layout {
   background: white;
   margin: 0;
   padding: 0;
@@ -11,8 +17,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-
 
 ul {
   margin: 0;
