@@ -3,14 +3,18 @@
 }
 
 .body {
-  background: url('BackgroundCell1.svg');
-  background-size: 30%;
+  background: white;
   margin: 0;
   padding: 0;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+.SMA-background {
+  background: url('BackgroundCell1.svg');
+  background-size: 30%;
 }
 
 ul {
