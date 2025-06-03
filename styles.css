@@ -32,3 +32,8 @@ a.nav-bar:hover {
   text-decoration: none;
   display: inline-block;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+}
