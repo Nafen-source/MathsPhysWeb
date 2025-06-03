@@ -50,7 +50,6 @@ a.nav-bar:hover {
 }
 
 .content {
-  position: relative; 
   height: 100vh;
   width: 100%;
   display: flex;
