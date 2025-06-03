@@ -10,7 +10,6 @@ header {
 }
 
 a.nav-bar:link, a.nav-bar:visited {
-  background-color: black;
   color: white;
   padding: 14px 25px;
   text-align: center;
@@ -19,7 +18,6 @@ a.nav-bar:link, a.nav-bar:visited {
 }
 
 a.nav-bar:hover {
-  background-color: black;
   color: #909090;
   padding: 14px 25px;
   text-align: center;
