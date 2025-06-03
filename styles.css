@@ -8,7 +8,6 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
-  flex-direction: column;
 }
 
 ul {
@@ -56,7 +55,6 @@ a.nav-bar:hover {
 }
 
 .content::before {
-  content: "";
   background: url('BackgroundCell1.svg');
   background-size: 30%;
   margin: 0;
@@ -65,7 +63,6 @@ a.nav-bar:hover {
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
-  flex-direction: column;
 }
 
 section {
