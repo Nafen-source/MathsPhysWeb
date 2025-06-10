@@ -6,7 +6,7 @@ body {
   justify-content: space-between;
 }
 
-.material-background {
+.material-background::before {
   background: url('BackgroundCell1.svg');
   background-size: 30%;
   opacity: 0.2;
