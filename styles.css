@@ -7,7 +7,7 @@ body {
   position: relative;
 }
 
-.material-background::before {
+.material-background {
   content: '';
   background: url('BackgroundCell1.svg');
   background-size: 30%;
