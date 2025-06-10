@@ -7,6 +7,7 @@ body {
 }
 
 .material-background::before {
+  content: '';
   background: url('BackgroundCell1.svg');
   background-size: 30%;
   opacity: 0.2;
