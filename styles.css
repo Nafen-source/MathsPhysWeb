@@ -4,12 +4,14 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
 .material-background::before {
   content: '';
   background: url('BackgroundCell1.svg');
   background-size: 30%;
+  position: absolute;
   opacity: 0.2;
 }
 
