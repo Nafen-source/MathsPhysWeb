@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summer Project</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({CommonHTML: {scale: 100}});
+</script>
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<body>
+  <header>
+    <nav id="NavBar">
+      <ul class="nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a class="nav-bar" href="URSS.html">Summer Project</a></li>
+        <li><a href="Dissertation.html">Dissertation</a></li>
+        <li><a href="Misc.html">Misc</a></li>
+        <li class="search-container">
+          <button class="search-btn">
+            Search
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="search-content">
+            <a href="#VPE">- Vlasov-Poisson</a>
+            <a href="#Simple">- Simplifications</a>
+            <a href="#Nonlin">- Return to Non-Linear</a>
+            <a href="#NonlinLand">- Landau Damping</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <div class="plasma-bg">
+    <section>
+      <h1 id="Intro">Landau Damping</h1>
+      <h3>Introduction:</h3>
+      <p>In 1938, trying to model plasmas, Anatoly Vlasov discovered the <a href="https://iopscience.iop.org/article/10.1070/PU1968v010n06ABEH003709">Vlasov-Maxwell equation</a>.
+      In the case of no magnetic fields and for non-relativistic speeds, these equations reduce to the
+      Vlasov-Poisson equations which are of interest throughout this project.
+      Later, in 1946, Lev Landau discovered the effect known as <a href="https://www.sciencedirect.com/science/article/abs/pii/B9780080105864500663">Landau damping</a>: perturbations in the plasma’s
+      electric field rapidly decay. This effect is particularly interesting as it only occurs when the
+      perturbations are sufficiently smooth. The <a href="https://projecteuclid.org/journals/acta-mathematica/volume-207/issue-1/On-Landau-damping/10.1007/s11511-011-0068-9.full">mathematical aspects</a> of this effect were first developed
+      by Clément Mouhot and Cédric Villani, earning Villani the 2010 fields medal. The original
+      article is 173 pages long and highly technical but over the last decade significant simplifications
+      have been made to the proof by Bedrossian, Masmoudi and Mouhot amongst others. This project followed the <a href="https://arxiv.org/abs/2211.13707">notes of Bedrossian</a>.<br>[ADD BOOK]</p>
+      
+      <h2 id="VPE">The Vlasov-Poisson</h2>
+      <h3>Derivation:</h3>
+      <p>The Vlasov-Poisson equations (VPEs) are a kinetic model of plasmas (analogously, <a href="https://press.princeton.edu/books/paperback/9780691130279/galactic-dynamics">galactic dynamics</a>) and so we shall start with the 
+        Boltzmann equation of kinetic theory which describes the probability density function of a typical gas particle.<br></p>
+        \(\hspace{3cm}\partial_t f + \dot{\mathbf{r}}\cdot\mathbf{\nabla_r}{f} + \dot{\mathbf{p}}\cdot\mathbf{\nabla_p}{f} = C\left[f\right]\)
+      <p>throughout this project, we consider the collisionless Boltzmann equation where \(C[f] = 0\). What remains is to find the advective terms which model plasmas.<br>
+      In plasmas, each particle experiences a Coulomb potential energy due to all other particles' charges. Hence we use the Hamiltonian:</p>
+      \(\hspace{3cm}\mathcal{H}_i = \frac{p_i^2}{2m} - \Phi(x_i) + \sum_{j\neq i} \frac{K q_i q_j}{|x_i - x_j|},\)
+      <p>where we have the kinetic potential energy of our \(i^{\text{th}}\) moving charge; the potential energy, \(\Phi\), due to the fixed ion background; and the total potential energy<br>
+      produced by all other charges within the plasma. K is the Coulomb constant and \(q_i\) is the charge of the \(i^{\text{th}}\) moving charge.<br>
+      From this, we obtain the following hamilton equations:</p>
+      \(\hspace{3cm}\begin{align} \dot{x}_i &= \partial_{p_i}\mathcal{H}_i = v_i,\\
+      \dot{p}_i &= -\partial_{x_i}\mathcal{H}_i = \partial_{x_i}\Phi - \partial_{x_i}\sum_{j\ne i}\frac{Kq_i q_j}{\lvert x_i - x_j\rvert}\end{align}\)
+      <p>We substitute these into the Boltzmann equation deriving the following:</p>
+      \(\hspace{3cm}\begin{align*}
+      &\frac{\partial f}{\partial t} + \mathbf{v}\cdot\mathbf{\nabla_x}f + \mathbf{E}(t,\mathbf{x})\cdot\mathbf{\nabla_v}f = 0,\\
+      &\begin{aligned}\mathbf{E}(t, \mathbf{x}) &= \mathbf{\nabla_x}\Phi - \mathbf{\nabla_x}\int_{-\infty}^\infty\frac{Kq^2}{\lvert\mathbf{x} - \mathbf{y}\rvert}\rho_f(t,\mathbf{y})~d\mathbf{y}\\
+      \quad&= \nabla_x(W\ast -n_0) +\nabla_x(W\ast\rho_f)\\
+      \quad&= \nabla_xW\ast\left(\int f(t,\mathbf{x}, \mathbf{v})~d\mathbf{v} -n_0\right),
+      \end{aligned}
+      \end{align*}\)
+      <p>where W is the electrostatic potential given by the sufficiently smooth function</p>
+      \(\hspace{3cm} W(\mathbf{x}) = K\frac{q^2}{|\mathbf{x}|}\)
+      <p>For a more convenient form of the VPEs, we must fourier transform the electric field, \(\mathbf{E}\). We start from the Yukawa potential, \(V_\lambda: \mathbb{R}^{3}\rightarrow \mathbb{R}\), defined by</p>
+      \(\hspace{3cm}V_\lambda (r,\theta,\phi) = \frac{1}{r}e^{-\lambda r}\)
+      <p>and by taking a fourier transform,</p>
+      \(\hspace{3cm}\begin{align*}
+      \mathcal{F}\left[V_\lambda\right] &= \int_0^{2\pi}\int_0^\pi\int_0^\infty\frac{e^{-\lambda r} e^{-i\mathbf{k}\cdot\mathbf{r}}}{r} r^2 sin(\theta)~dr~d\theta~d\phi\\
+      &= 2\pi\int_0^\pi\int_0^\infty r e^{-\lambda r} e^{-ikrcos(\theta)}sin(\theta )~dr~d\theta\\
+      &= 2\pi\int_0^\infty r e^{-\lambda r} \frac{e^{ikr} - e^{-ikr}}{ikr}~dr\\
+      &= \frac{2\pi}{ik}\int_0^\infty e^{(ik-\lambda) r} - e^{-(ik+\lambda) r}~dr\\
+      &= \frac{2\pi}{ik} \left[ \frac{e^{(ik-\lambda) r}}{ik-\lambda} + \frac{e^{-(ik+\lambda) r}}{ik+\lambda} \right]_0^\infty\\
+      &= -\frac{2\pi}{ik} \left[ \frac{1}{ik-\lambda} + \frac{1}{ik+\lambda} \right]\\
+      &= \frac{4\pi}{k^2+\lambda^2}
+      \end{align*}\)
+      <p>We can now make the following computation</p>
+      \(\hspace{3cm}\begin{align*}
+      \hat{E} &= \mathcal{F}\left[\mathbf{\nabla_x}W\ast\rho\right] = i\mathbf{k}\hat{W}\hat{\rho} = i\mathbf{k}\frac{q^2}{4\pi m\epsilon_0}\mathcal{F}\left[ V_0(\mathbf{x})\right]\hat{\rho}\\
+      &= i\mathbf{k}\frac{q^2}{m\epsilon_0 k^2}\hat{\rho} = i\mathbf{k}\frac{q^2}{em\epsilon_0}\hat{\Phi} = \frac{q^2}{em\epsilon_0}\mathcal{F}\left[\nabla\Phi\right],
+      \end{align*}\)
+      <p>where we have used \(\Delta\Phi = -e\rho\) as the equation relating electric potential, \(\Phi\) to the fluctuation in the electron density, \(\rho\). Suppressing physical constants, we have arrived at the Vlasov-Poisson equations:</p>
+      \(\hspace{3cm}\begin{align}
+      &\partial_t f + \mathbf{v}\cdot\nabla_{\mathbf{x}}f + \mathbf{E}(t,\mathbf{x})\cdot\nabla_{\mathbf{v}} f = 0\\
+      &\mathbf{E}(t,\mathbf{x}) = \nabla\Delta^{-1}\rho\end{align}\).
+      <p>These equations model non-relativistic plasmas. Later, we simplify these to discuss
+      Landau damping before progressively building back to the full equations.</p>
+      
+      <h3>Properties:</h3>
+      <p>The VPEs are well-posed. Their solutions in various spaces was shown by Horst in the 1980s; both <a>locally</a> and <a>globally</a>. One example of a space with solutions is the velocity-weighted Sobolev spaces with norm</p>
+      \(\hspace{3cm}\| f\|_{H^s_m} = \| \langle v\rangle^m \langle\nabla\rangle^s f\|_{L^2}\)
+      <p>with \( m > d/2 \) and \( s > d/2 + 1\) and where \(\langle\cdot\rangle = (1 + |\cdot|^2)^{1/2}\) are Japanese brackets.</p>
+      <p>The equations are time reversible such that if \(f(t,x,v)\) is a solution, then so is \(f(-t, x, -v)\).</p>
+      <p>If all intial quantities are finite, then we get several conserved quantities,</p>
+      \(\begin{align*}
+      &\text{$L^p$ norms:}\\ &\hspace{1cm}\|f(t)\|_{L^p} = \|f(0)\|_{L^p}\\
+      &\text{Boltzmann entropy:}\\ &\hspace{1cm}\int\int f(t,x,v) \log f(t,x,v) dxdv = \int\int f(0,x,v)\log f(0,x,v) dxdv\\
+      &\text{Energy:}\\ &\hspace{1cm}\int\int f(t,x,v)|v|^2 dxdv + \frac{1}{2}\|E(t)\|_{L^2}^2 = \int\int f(0,x,v)|v|^2 dxdv + \frac{1}{2}\|E(0)\|_{L^2}^2
+      \end{align*}\)
+      <p>The last major property is that spatially homogeneous distributions, \(f^0 (v)\), with \(\int f^0~dv = n_0\), are solutions. In such solutions, electrons may still move but they do not change density in any particular location. The most important example of these equilibria are Maxwellians:</p>
+      \(\hspace{3cm}\qquad f^0(v) = \frac{n_0}{(4\pi T)^{d/2}}e^{-|v|^2/{2T}},\)
+      <p>This solution corresponds to homogeneous plasmas that are in thermal equilibrium. Locally, this is the natural state after a certain amount of time. For plasmas with collisions (realistic plasmas have weak collisions - but collisions all the same), there are other important equilibria.</p>
+      
+      <h2 id="Simple">Simplifications</h2>
+      <p>From this point on, we focus on the Torus \((x,v) \in \mathbb{T}^d \times \mathbb{R}^d\).</p>
+      <h3>Linear VPE:</h3>
+      <p>To study Landau Damping, we must make simplifications, the first of which is to linearise the VPE.<br>
+      At the end of the last chapter, we discussed equilibrium solutions. If we perturb these solutions, we obtain </p>
+      \(\hspace{3cm} f(t,x,v) = f^0 (v) + \eta g(t,x),\)
+      <p>which, when substituted into the VPE, gives a linear version:</p>
+      \(\hspace{3cm}\begin{align*}
+      &\eta\partial_tg(t,\mathbf{x}) + \eta\mathbf{v}\cdot\mathbf{\nabla_{x}}g(t,\mathbf{x}) + \mathbf{E}(t, \mathbf{x})\cdot\mathbf{\nabla_v}f^0(\mathbf{v}) = 0,\\
+      &\mathbf{E}(t, \mathbf{x}) = \nabla\Delta^{-1}(n_0 + \eta\rho_g(t,\mathbf{x})) = \eta\nabla\Delta^{-1}\rho_g(t,\mathbf{x})
+      \end{align*}\)<p></p>
+      
+      <h3>Kinetic-Free Transport Equation:</h3>
+      <p>To further simplify these equations, we note that, for Landau damping, the electric field is
+      damped to near zero. In the long time, we can neglect the electric field term giving the Kinetic
+      Free Transport equation (KFTE):</p>
+      \(\hspace{3cm}\begin{align}&\partial_tg(t, \mathbf{x}) + \mathbf{v}\cdot\mathbf{\nabla_x}g(t,\mathbf{x}) = 0,\\
+      &g(0, \mathbf{x}, \mathbf{v}) = g_{in}(\mathbf{x}, \mathbf{v})\end{align}\)
+      <p>This system describes the motion of non-interacting particles. We expect that solutions to the
+      linear VPE which experience Landau damping should tend, in some sense, to solutions
+      of the KFTE. As a result, we also expect Landau damping in solutions to the
+      KFTE.</p>
+      <p>This equation is much easier to solve than the linear VPE. Using the method of characteristics, we can solve in real and fourier spaces:</p>
+      \(\hspace{1cm}\begin{align*}
+      &\text{Real: } \\ &\hspace{2cm}g(t,\mathbf{x},\mathbf{v}) = g_{in}(\mathbf{x}-t\mathbf{v})\\
+      &\begin{aligned}
+      \text{Fourier: }\\
+      &\partial_t\hat{g} - \mathbf{k}\cdot\mathbf{\nabla_\eta}\hat{g} = 0 \text{,}\quad \hat{g}(0, \mathbf{k}, \mathbf{\eta}) = \hat{g}_{in}(\mathbf{k},\mathbf{\eta})\\
+      &\hat{g}(t,\mathbf{k},\mathbf{\eta}) = \hat{g}_{in}(\mathbf{k}, \mathbf{\eta}+\mathbf{k}t)
+      \end{aligned}\\
+      &\text{Fourier Density: }\\ &\hspace{.5cm}\hat{\rho}(t,\mathbf{k}) = \mathcal{F}\left[\int_{-\infty}^\infty e^{-i\mathbf{v}\cdot\mathbf{0}}g(t,\mathbf{x}, \mathbf{v})d\mathbf{v}\right] = (2\pi)^d\hat{g}(t,\mathbf{k},\mathbf{0}) = (2\pi)^d\hat{g}_{in}(\mathbf{k},\mathbf{k}t) 
+      \end{align*}\)
+      <p>From these equations we can show that a "Phase Mixing" effect occurs.</p>
+      
+      <h3>Mixing & Unmixing:</h3>
+      <p>In order to describe phase mixing, we first consider finitely many particles in circular motion (toroidal space), with slightly different speeds, each starting at the same location. All particles will seperate to be roughly equidistant and, for large times, they eventually get arbitrarily close again.<br>
+      Phase mixing is the continuum limit of this seperating of particles. As the number of particles increases, the time for recombination increases. We show phase mixing in the KFTE using the below proposition.</p>
+      <p>First, we need some inequalities on Japanese Brackets:</p>
+      <p><b><i>Japanese Bracket Inequalities:</i></b><br>
+      For the Japanese bracket notation, we have the inequalities:</p>
+      <ul style="list-style-type:circle">
+        <li>\( |x|^{\tilde{\sigma}} < \langle x \rangle^\sigma \), for \( 0 < \tilde{\sigma} < \sigma \).</li>
+        <li>\( \langle a \rangle \langle x \rangle \lesssim \langle ax \rangle \), for \(x > 0\), \( a \geq 1\).</li>
+      </ul>
+      <button type="button" class="collapsible">proof:</button>
+      <div class="content">
+        <p>The first is trivial from \( |x|^2 < 1 + |x|^2 \). <br>
+        The second follows from \( \frac{\langle a \rangle^2 \langle x \rangle^2}{\langle ax \rangle^2} \leq 1 + \frac{x^2 + a^2}{1+x^2} \rightarrow 2. \) So, for large \(x\), we have the result.\( \hspace{.5cm}\square \)</p>
+      </div>
+      <p><b><i>Phase mixing density decay of KFTE:</i></b><br>
+      For any \(\lambda, s, \sigma > 0\) constants, the following inequality holds:</p>
+      \(\hspace{3cm} e^{\lambda \langle kt\rangle^s}\langle kt\rangle^\sigma |\hat{\rho}(t,k)| \lesssim \sup_{\eta} e^{\lambda \langle\eta\rangle^s}\langle\eta\rangle^\sigma |\hat{g}_{in}(k,\eta)|\).
+      <p>Hence it follows that regularity in the velocity variable of the initial condition (RHS) gives rise to the decay in the fluctuation density (LHS).</p>
+      <button type="button" class="collapsible">proof:</button>
+      <div class="content">
+        <p>For simplicity, we drop the exponentials. From the fourier density, we obtain the inequality</p>
+        \(\hspace{3cm}\langle kt\rangle^\sigma |\hat{\rho}(t,k)| = (2\pi)^d \langle kt\rangle^\sigma |\hat{g}_{in}(k,kt)| \leq (2\pi)^d \sup_\eta \langle\eta\rangle^\sigma |\hat{g}_{in}(k,\eta)|\)
+        <p>This proves the inequality, now we continue to the decay claim.<br>
+        For large \( t \), we seperate the Japanese brackets to get</p>
+        \(\hspace{3cm}\langle k \rangle^\sigma |\hat{\rho}(t,k)| \lesssim \frac{1}{\langle t \rangle^\sigma} \sup_\eta \langle\eta\rangle^\sigma |\hat{g}_{in}(k,\eta)|\) 
+        <p>By summing modes and by integrating along \(x\),</p>
+        \( \hspace{1cm}\begin{align*}
+        &\sum_k\langle k\rangle^{2\sigma}|\hat{\rho}(t,k)|^2 \lesssim\frac{1}{\langle t\rangle^{2\sigma}}\sum_k\sup_\eta \langle\eta\rangle^{2\sigma} |\hat{g}_{in}(k,\eta)|^2\\
+        &\sum_{|\alpha|\leq\sigma}|\widehat{\nabla_x^\alpha\rho}(t,k)|^2 \lesssim\frac{1}{\langle t\rangle^{2\sigma}}\sum_{|\alpha|\leq\sigma}\sup_\eta |\widehat{\nabla_v^\alpha g_{in}}(k,\eta)|^2\\
+        &\begin{aligned}\sum_{|\alpha|\leq\sigma} \|\widehat{\nabla_x^\alpha\rho}(t,k)\|_{L_x^2}^2 &\lesssim\frac{1}{\langle t\rangle^{2\sigma}}\int_{\mathbb{T}^d}\sum_{|\alpha|\leq\sigma}\sup_\eta \left|\int_{\mathbb{R}^d}\nabla_v^\alpha g_{in}(k,v) e^{-iv\cdot\eta}dv\right|^2 dx\\
+        &\leq \frac{1}{\langle t\rangle^{2\sigma}}\int_{\mathbb{T}^d}\sum_{|\alpha|\leq\sigma}\sup_\eta \left(\int_{\mathbb{R}^d}|\nabla_v^\alpha g_{in}(k,v)|dv\right)^2 dx\\
+        &\leq \frac{1}{\langle t\rangle^{2\sigma}}\int_{\mathbb{T}^d}\left(\sum_{|\alpha|\leq\sigma}\|\nabla_v^\alpha g_{in}(k,v)\|_{L_v^1}\right)^2 dx
+        \end{aligned}
+        \end{align*} \)
+        <p>So, using Plancherel's theorem, we reach our final inequality,</p>
+        \(\hspace{3cm} \|\rho(t,x)\|^2_{H^\sigma} \lesssim \frac{1}{\langle t \rangle^{2\sigma}} \int_{\mathbf{T}^d} \| g_{in}(x,v) \|^2_{W^{\sigma, 1}}~dx\)
+        <p>This inequality shows that if there is a sufficient regularity in the velocity variable of the initial data, then there is decay in the fluctuation density of the plasma.\(\hspace{.5cm}\square\)</p>
+      </div>
+      <p>Phase mixing and the corresponding decay in fluctuation density can be shown in numerical solutions to the KFTE:</p>
+      <video width="60%" height="60%" src="../Graphics/KineticFreeVideo.mp4" controls>
+        Video not available.
+      </video>
+      <p>This solution is an example of a "continuum" of particles distributed in toroidal space and with velocities varying smoothly in the initial condition - a ball in phase space. 
+        The density of the plasma is also animated and shows the decay in fluctuations as the regularity in the velocity variable decreases.</p>
+      <p>As a solution undergoes phase mixing, in the \(t\rightarrow\infty\) limit, the distribution smears out almost into a rectangle - the distribution weakly converges to the \(x\) average of the intial data:</p>
+      \(\hspace{3cm} g(t,x,v) \rightharpoonup \frac{1}{(2\pi)^n}\int_{\mathbb{T}^d} g_{in}(x,v)~dx,\hspace{1cm}\text{as t}\rightarrow\infty\)
+      <p>In this limit, the solution is stirred to smaller and smaller scales in velocity and so, in the limit, \(\int_{\mathbb{T}^d}\| g_{in} (x,v)\|_{W^{\sigma,1}}^2~dx\) gets infinitely large - the fluctuation density is no longer forced to decay. A solution with this level of irregularity in velocity will no longer experience Landau damping - the solution is irreversible in the limit.</p>
+      <p>Contrary to the above, there is anti-phase mixing [REF] (known as the Orr mechanism in a fluids context). This is the effect for which if we have high, but finite, frequencies, we see unmixing of the initial data. To see this, consider initial data with a range of high frequencies:</p>
+      \(\hspace{3cm}\hat{g}_{in}(k,\eta) = e^{-|\eta - \eta_0|},\)
+      <p>where \(\eta_0 \gg 1\) is the frequency on which the range is centered. This yields,</p>
+      \(\hspace{3cm}\hat{\rho}(t,k) = (2\pi)^n \hat{g_{in}}(k,kt) = (2\pi)^n e^{-|kt - \eta_0|}\).
+      <p>Hence the density fluctuation is exponentially localised to the critical time: \(t_c = \eta_0 / k\).</p>
+      <p>Again we show a numerical solution to the KFTE which demonstrates anti-phase mixing:</p>
+      <video width="60%" height="60%" src="../Graphics/KineticFreeOrrVideo.mp4" controls>
+        Video not available.
+      </video>
+      <p>By looking carefully, we can see that this solution has initial data which is the final data of the previous video with a flipped velocity sign. We can thus see that, by the Orr mechanism, we return to the ball in phase space, albeit with numerical error (larger error for larger velocities).</p>
+      <p>We now prove the Landau damping estimate for the KFTE.</p>
+      <p><b><i>Kinetic Free Landau Damping:</i></b> Let</p>
+      \(\hspace{3cm} \rho (t,x) = \int g_{in}(x-tv, v)~dv,\)
+      <p>i.e. the density associated with a solution of the KFTE. Then for any \(\sigma,\lambda \geq 0\) and \(s\in[0,1]\) and any \(m > (d-1)/2\) we have</p>
+      \( \hspace{2cm}\| |\nabla_x|^{1/2}\langle\nabla_x, t\nabla_x \rangle^\sigma e^{\lambda \langle\nabla_x, t\nabla_x \rangle^s} \rho \|_{L^2_{t,x}} \lesssim \|\langle v\rangle^m \langle\nabla_x,\nabla_v\rangle^\sigma e^{\lambda\langle\nabla_x,\nabla_v\rangle^s} g_{in}\|_{L^2_{x,v}} \).
+      <p></p>
+      <button type="button" class="collapsible">proof:</button>
+      <div class="content">
+        <p>Only the \(\sigma=\lambda=s=0\) case is needed, the full proof follows as a consequence. In toroidal space, we have,</p>
+        \( \hspace{3cm} \begin{align*}
+        \sum_{k\neq 0}\int_{\mathbb{R}^d} |k||\hat{\rho}(t,k)|^2~dt &= \sum_{k\neq 0}\int_{\mathbb{R}^d} |k||\hat{g}_{in}(k,kt)|^2~dt\\
+        &= \sum_{k\neq 0}\int_{\mathbb{R}^d} |k||\hat{g}_{in}(k,\frac{k}{|k|}t)|^2~dt\\
+        &\lesssim\sum_{k\neq 0}\sum_{0\leq j \leq m}\|D_\eta^j \hat{g}_{in}(k,\cdot)\|_{L_\eta^2}^2\\
+        &\lesssim\|\langle v \rangle^m g_{in}\|_{L_x^2L_v^2}^2,
+        \end{align*} \)
+        <p>where the penultimate line is due to the Sobolev trace lemma for the \(L^2\) restriction of a function in \(\mathbb{R}^d\) to a line.\(\hspace{.5cm}\square\)</p>
+      </div>
+      <p><b><i>Remark</i></b>: In dispersive equations, one must pay some kind of localisation to get a pointwise-in-t decay estimate. In phase mixing, one must pay regularity. [LOOK AT REFERENCES IN BED NOTES]</p>
+
+      <h3>Linear Landau Damping:</h3>
+      <p>In this section, we shall build up our proof to include Landau damping in the linear VPE. To do this, we need to be able to solve the 
+        <a id="Volterra" class="hoverable" href="Volterra.html">Volterra equation <span class="hoverableText">The Volterra integral equation:<br>\(\rho(t) = H(t) + \int_0^t K(t-\tau)\rho(\tau)~d\tau\)</span></a>. It is also helpful, but not necessary, to only consider analytic backgrounds \(\hat{f^0}\). That is, we assume that there exists \(\lambda_0\) such that</p>
+      \(\hspace{3cm}\left|\hat{f^0}(\eta)\right| + \left|\nabla_\eta \hat{f^0} (\eta)\right| + \left|\nabla_\eta^2 \hat{f^0}(\eta)\right|\lesssim e^{-\lambda_0 |\eta|}\).
+      <p>This will allow us to find an appropriate decay estimate from which we can bound the kernel, R, of a solution by some exponential-like decay.[REWORD]</p>
+      <p><b><i>Landau's, Penrose's, Degond's Theorem</i></b><br>
+      Under the Penrose stability condition on \(f^0\), the following holds for the linear VPE: there exists a kernel \(R(t,k)\) such that</p>
+      \(\hspace{3cm}\hat{\rho}(t,k) = \hat{g}_{in} (k,kt) + \int_0^t R(t-\tau, k) \hat{g}_{in} (k.k\tau)~d\tau\),
+      <p>and there exists \(\delta \in (0,\lambda_0)\) such that</p>
+      \(\hspace{3cm} |R(t,k)| \lesssim \frac{1}{|k|}e^{-\delta |kt|}\).
+      <p>From this, we obtain the following Landau damping estimate: for any integer \(m > \frac{1}{2} (d-1)\), any \(\sigma, \lambda \geq 0\) and any \(s\in [0,1]\),</p>
+      \(\begin{align}
+      \||\nabla_x|^{1/2} \langle\nabla_x,t\nabla_x\rangle^\sigma e^{\lambda\langle\nabla_x,t\nabla_x\rangle^s}\rho\|_{L_t^2L_x^2} \lesssim \|\langle v\rangle^m \langle\nabla_x, \nabla_v\rangle^\sigma e^{\lambda\langle\nabla_x, \nabla_v\rangle^s} g_{in}\|_{L_{x,v}^2}
+      \end{align}, \hspace{1cm} (\ast)\)
+      <p>If we define \(f(t,x-tv,v) = g(t,x,v)\), then we can show that there exists \(f_\infty\) such that if \(\sigma \geq 1\) in (\(\ast\)) and \(J\geq 0\) is arbitrary, then it holds,</p>
+      \(\hspace{3cm}\lim_{t\rightarrow\infty} \|\langle v\rangle^J \langle\nabla\rangle^{\sigma - 1}(f(t)-f_\infty)\|_{L^2} = 0.\)
+      <p>Map of Proof:
+        <ul>
+          <li>To solve the Linear Vlasov-Poisson equation, transform into a <a id="Volterra" class="hoverable" href="Volterra.html">Volterra equation <span class="hoverableText">The Volterra integral equation:<br>\(\rho(t) = H(t) + \int_0^t K(t-\tau)\rho(\tau)~d\tau\)</span></a>;</li>
+          <li>To solve the Volterra equation, show stability and, making use of \(\hat{f^0}\) analyticity, show decay in the integrand prefactor;</li>
+          <li>We expect our solution to tend, with time, to that of the Kinetic Free Transport, so we need to show a decay estimate of resolution kernal, \(R(t,k)\);</li>
+          <li>We now have a solution which depends nicely on the initial data, \(H(t,k)\), and so we can connect this solution to what we know about Landau damping in the Kinetic Free Transport to arrive at a linear Landau damping estimate; and</li>
+          <li>Use Landau damping estimate to get Scattering estimate.</li>
+        </ul>
+      </p>
+      <p>Before we do the full proof, we shall...</p>
+      <button type="button" class="collapsible">proof:</button>
+      <div class="content"></div>
+
+      <h2 id="Nonlin">Returning to Non-Linear</h2>
+      <h3>Plasma Echoes:</h3>
+      
+      <h3>Gevrey Regularity:</h3>
+      
+      <h2 id="NonlinLand">Non-Linear Landau Damping</h2>
+      <h3>The Theorem:</h3>
+      
+      <h3>The Proof:</h3>
+    </section>
+  </div>
+  <a class="up" href="#NavBar">\(\uparrow\)</a>
+  <footer class="footer">Contact me: nathangreen.nmg@gmail.com</footer>
+</body>
+<script src="../Collapse.js"></script>
+</html>
