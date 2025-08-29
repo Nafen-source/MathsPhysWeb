@@ -1,0 +1,457 @@
+/*Layout*/
+header {
+  background: black;
+  color: white;
+  margin: 0;
+  padding: 5px;
+
+  /*&.scrolled {
+    background-color: #666;
+    position: fixed;
+  }*/
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+#pfp {
+  position: relative;
+  float: right;
+  right: 2ch;
+  top: 3vh;
+  z-index: 1;
+  max-width: 30ch;
+  max-height: 30vh;
+  border: #000 solid 3px;
+  box-shadow: 0px 8px 5px 5px rgba(0,0,0,.2);
+}
+
+section {
+  color: black;
+  background: white;
+  box-shadow: 0px 8px 5px 5px rgba(0,0,0,.2);
+  opacity: 1;
+  margin: 15px 30px 15px 30px;
+  padding: 0px 20px 5px 15px;
+}
+
+.material-bg {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('Backgrounds/BackgroundCell1.svg');
+    background-size: contain;
+    background-repeat: repeat-y;
+    z-index: -1;
+    opacity: 0.75;
+  }
+
+  & > section {
+    border: gray solid 3px;
+  }
+}
+
+.plasma-bg {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('Backgrounds/Tokamak.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: -1;
+    opacity: 0.75;
+  }
+
+  & > section {
+    border: rgb(145, 7, 145) solid 3px;
+  }
+}
+
+.fluids-bg {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url(Backgrounds/Water\ 3.PNG) center bottom repeat-x, url(Backgrounds/Water\ 0.PNG) center top repeat-x, url(Backgrounds/Water\ 1.PNG) center center repeat;
+    background-size: 10%;
+    z-index: -1;
+    opacity: 0.7;
+  }
+
+  & > section {
+    /*visibility: hidden;*/
+    border: rgb(10, 25, 230) solid 3px;
+  }
+}
+
+.neutral-bg > section {
+  border: black solid 3px;
+}
+
+.footer {
+  color: white;
+  background: black;
+  opacity: 1;
+  margin: 0;
+  padding: 5px 0px 5px 5px;
+  margin-top: auto;
+}
+
+/*Links for Navigation*/
+.nav {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  overflow: hidden;
+
+  & a {
+    color: white;
+    background-color: black;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    float: left;
+  }
+}
+
+.search {
+  float: right;
+  margin: 0px;
+  margin-right: 60px;
+  padding: 0px;
+  overflow: hidden;
+
+  & .search-btn {
+    border: none;
+    display: inline-block;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: medium;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0px;
+    padding: 15px 3px;
+  }
+}
+
+.nav a:hover, .search-btn:hover, .search-btn:focus {
+  color: #909090;
+}
+
+.search-content {
+  display: none;
+  position: absolute;
+  right: 7px;
+  z-index: 1;
+  min-width: 80px;
+  max-width: 150px;
+  padding: 0px;
+  background-color: black;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+  & a {
+  padding: 10px;
+  float: none;
+  color: white;
+  text-decoration: none;
+  text-align: left;
+  display: block;
+  }
+}
+
+.search:hover .search-content {
+  display: block;
+}
+
+/*Navigation cards*/
+.cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: center;
+  padding: 0px;
+  margin: 0px;
+  left: 10ch;
+}
+
+.plasma-img {
+  position: relative;
+  margin: 2px 2px 0px 2px;
+  height: 150px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: rgb(145,7,145) solid 2px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('Backgrounds/Tokamak.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+  }
+
+  &:hover::before {
+      opacity: 0.5;
+  }
+
+  &:hover .URSS-card-text {
+    opacity: 0.9;
+    display: block;
+  }
+}
+
+.material-img {
+  position: relative;
+  margin: 2px 2px 0px 2px;
+  height: 150px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: rgb(230, 130, 10) solid 2px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('Graphics/Transition.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+  }
+
+  &:hover::before {
+    opacity: 0.5;
+  }
+
+  &:hover .Diss-card-text {
+    opacity: 0.9;
+    display: block;
+  }
+}
+
+.fluids-img {
+  position: relative;
+  margin: 2px 2px 0px 2px;
+  height: 150px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: rgb(10, 25, 230) solid 2px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('Graphics/Fluid.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+  }
+
+  &:hover::before {
+    opacity: 0.5;
+  }
+
+  &:hover .Sum-card-text {
+    opacity: 0.9;
+    display: block;
+  }
+}
+
+.URSS-card-text, .Diss-card-text, .Sum-card-text {
+  display: none;
+  position: absolute;
+  font-size: larger;
+  color: black;
+  opacity: 1;
+}
+
+.URSS-card-description, .Diss-card-description, .Sum-card-description {
+  visibility: hidden;
+  width: 185px;
+  height: auto;
+  padding: 7px;
+  margin: 0px 3px 3px 3px;
+  background-color: #eee;
+  overflow-wrap: break-all;
+  border: black solid 1px;
+  border-style: none solid solid solid;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+
+/*Hoverable Text*/
+a.hoverable:link, a.hoverable:visited {
+  position: relative;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a.hoverable .hoverableText {
+  visibility: hidden;
+  min-width: fit-content;
+  bottom: 100%;
+  left: 0%;
+  background-color: #666;
+  color: white;
+  text-align: center;
+  padding: 10px 5px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+}
+
+a.hoverable .hoverableText::after {
+  content: " ";
+  position: absolute;
+  top: 100%;
+  right: 88%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #666 transparent transparent transparent;
+}
+
+a.hoverable:hover {
+  color: darkgray;
+}
+
+a.hoverable:hover .hoverableText {
+  visibility: visible;
+}
+
+
+/*Buttons and Videos*/
+video {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: auto;
+  width: 80%;
+  border: 1px solid black;
+}
+
+.collapsible {
+  position: relative;
+  color: #444;
+  padding-bottom: 3px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  align-self: center;
+  cursor: pointer;
+  width: 50px;
+}
+
+.active, .collapsible:hover {
+  top: 2px;
+  box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.4);
+}
+
+.content{
+  display: none;
+  overflow: hidden;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: fit-content;
+  background-color: #f1f1f1;
+}
+
+.up {
+  color: black;
+  border: rgba(0,0,0,0.2) solid 1px;
+  background-color: rgba(230, 230, 230, 0.2);
+  text-decoration: none;
+  position: fixed;
+  top: 92%;
+  right: 0%;
+  padding: 5px 10px;
+  margin: 10px;
+
+  &:hover {
+    content: '';
+    background-color: rgba(230, 230, 230, 0.95);
+    border: rgba(0,0,0,0.95) solid 1px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+  }
+}
+
+
+/*Page Text Content*/
+h1 {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: large;
+}
+
+.definition {
+  border-left: rgba(230, 30, 30, 0.6) solid 2px;
+  padding-left: 3px;
+}
+
+.theorem {
+  border-left: rgba(30, 30, 190, 0.6) solid 2px;
+  padding-left: 3px;
+}
+
+.lemma {
+  border-left: rgba(128, 0, 128, 0.6) solid 2px;
+  padding-left: 3px;
+}
+
+.side-by-side-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0px;
+  margin: 0px;
+}

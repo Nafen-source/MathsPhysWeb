@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+  <script type="text/javascript" async src="JS/card.js"></script>
+  <header>
+    <nav>
+      <ul class="nav">
+        <li><a class="nav-bar" href="index.html">Home</a></li>
+        <li><a class="nav-bar" href="pages/URSS.html">Landau Damping</a></li>
+        <li><a class="nav-bar" href="pages/Dissertation.html">Shape Memory Alloys</a></li>
+        <li><a class="nav-bar" href="pages/Euler.html">Turbulent Flows</a></li>
+        <li><a class="nav-bar" href="pages/Misc.html">Misc</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="neutral-bg">
+    <img id="pfp" src="/MyWeb/Website/Graphics/Pfp.jpg">
+    <section style="position: relative; top: 3vh; margin-bottom: 5vh;">
+      <h1 class="title">Hello, World!</h1>
+      <p style="max-width: 85%;">This website is a place for me to dump information about interests and hobbies.
+        I plan to talk about areas of maths and physics that I have learnt throughout my undergraduate and masters
+        particularly my summer 2024 project, my dissertation, and new areas I will learn in the next year while I apply for jobs and PhDs. 
+        I would also like to talk a bit about <a>other interests</a>.<br></p>
+
+      <div class="cards">
+        <a id="URSS-card" href="pages/URSS.html">
+          <div class="plasma-img">
+            <p class="URSS-card-text"><b>Landau Damping</b></p>
+          </div>
+        </a>
+        <a id="Diss-card" href="pages/Dissertation.html">
+          <div class="material-img">
+            <p class="Diss-card-text"><b>Shape Memory Alloys</b></p>
+          </div>
+        </a>
+        <a id="Sum-card" href="pages/Euler.html">
+          <div class="fluids-img">
+            <p class="Sum-card-text"><b>Turbulent Flows</b></p>
+          </div>
+        </a>
+        <p id="URSSDesc" class="URSS-card-description">A correspondence between the mixing of particles in phase space and the damping of the plasma density.</p>
+        <p id="DissDesc" class="Diss-card-description">Once certain alloys are deformed, they may return to their original undeformed shape through the application of sufficient heat.</p>
+        <p id="SumDesc" class="Sum-card-description">Currently under work. I hope to build up my own knowledge of Convex integration to understand the work of <a href="https://arxiv.org/abs/1603.09714">Daneri and Szekelyhidi</a>.</p>
+      </div>
+    </section>
+  </div>
+  
+  <footer class="footer">Contact me: nathangreen.nmg@gmail.com</footer>
+</body>
+</html>
