@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turbulence</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({CommonHTML: {scale: 100}});
+</script>
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <body>
+    <header>
+      <nav>
+        <ul class="nav">
+          <li><a class="nav-bar" href="../index.html">Home</a></li>
+          <li><a class="nav-bar" href="URSS.html">Landau Damping</a></li>
+          <li><a class="nav-bar" href="Dissertation.html">Shape Memory Alloys</a></li>
+          <li><a class="nav-bar" href="Euler.html">Turbulent Flows</a></li>
+          <li><a class="nav-bar" href="Misc.html">Misc</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="fluids-bg">
+        <section>
+          <h1 class="title">Euler's Equation</h1>
+          <h2>Introduction:</h2>
+          <p>In this project, we will build up to understanding the paper of <a href="https://arxiv.org/abs/1603.09714">Daneri and Szekelyhidi</a>. The results of which address the Cauchy problem for the incompressible Euler equation,
+            introduce Makido flows, and ..... CLOSURE PROBLEM?</p>
+          <p>This project was of interest to me due to the involvement of a method called convex integration - an approach to finding very non-trivial solutions to non-linear problems. I was introduced to this method in my dissertation on shape-memory alloys... . I learnt it had applications varying across geometry, material-science, and turbulent fluids.</p>
+
+          <p>Turbulent flows are typically present in low viscosity fluids and so can be modelled by the incompressible Euler equations:</p>
+          \(\hspace{2cm}\begin{align}
+            &\partial_t v + \nabla\cdot (v\otimes v) + \nabla p = 0,\\
+            &\nabla\cdot (v) = 0
+            \end{align}\)
+            
+          <p>The flows are characterised by rapid and chaotic changes in a fluid's velocity and so can be tricky to analyse. One method for addressing turbulence is through Reynold's averaging where we take advantage of Laminar flows that profile the turbulent flow.
+            For example, by measuring the velocity at a point of a turbulent flow through a cylinder:</p>
+          <!--IMAGE-->
+          <p>Then by taking an average, we obtain a Laminar flow</p>
+          <!--IMAGE-->
+          <p>Because Laminar flows are well-behaved, we can model turbulent flows by their fluctuations from their Laminar profile. Before we do this in detail, it is noteworthy that the type of averaging is irrelevent, it could be a long-time average, spatial average (average over a spatial domain at an instant in time) or ensemble averages (taken over many identical experiments).</p>
+        </section>
+
+        <section>
+          <h2>Reynold's Averaging:</h2>
+          <p>We start by writing the instantaneous velocity, v, as</p>
+          \(\hspace{2cm}v = \langle v\rangle + v'\)
+          <p>where \(\langle v\rangle\) is the mean flow and \(v'\) is the turbulent part fluctuation. By taking the average of both sides and using linearity we see that \(\langle v'\rangle = 0\). Furthermore, we compute,</p>
+          \(\hspace{2cm} \langle v^2\rangle = \langle \langle v\rangle^2 + 2\langle v\rangle v' + v'^2 \rangle = \langle v\rangle^2 + \langle v'^2\rangle\)
+          <p>We state the rules of Reynold's averaging below</p>
+          \(\hspace{2cm}\begin{cases}
+            &\langle v'\rangle = 0,\\
+            &\langle \langle v\rangle\rangle = \langle v\rangle,\\
+            &\langle\langle v\rangle v'\rangle = 0,\\
+            &\langle v'^2\rangle = \langle v^2\rangle - \langle v\rangle^2 \neq 0,\text{ and}\\
+            &\langle\partial_x v\rangle = \partial_x \langle v\rangle.
+          \end{cases}\)
+
+          <p>We will first take a Reynold's averaging of the continuity equation - this will be useful later.<br>
+            For incompressible flows, we have the continuity equation: \(\nabla \cdot v = 0\). By using the Reynold's decomposition \(v_i = \langle v_i \rangle + v'_i\) and taking an average, we compute</p>
+          \(\hspace{2cm}\begin{align}
+          &\langle \partial_i \langle v_i \rangle + \partial_i v'_i \rangle = 0\\
+          &\partial_i \langle v_i \rangle + 0 = 0
+          \end{align}\)
+
+          <p>Hence we arive at the Reynolds averaged continuity equations:</p>
+          \(\hspace{2cm} \partial_i \langle v_i\rangle \text{ and } \partial_i v'_i = 0\)
+
+
+          <h3>Deriving Reynold's Stress</h3>
+          <p>The Reynolds stress is an artificial stress that is responsible for the turbulence of the flow. Having dimensions of velocity squared, it is not a real stress.<br>
+          We start with applying the Reynolds decompositions \(v = \langle v\rangle + v'\) and \(p = \langle p\rangle + p'\) to the Euler equation.</p>
+          \(\hspace{1cm}\begin{align}
+          \partial_t v_i + v_j \partial_j v_i + \partial_i p = 0&\\
+          \partial_t(\langle v_i\rangle + v'_i) + (\langle v_j \rangle + v_j')\partial_j (\langle v_i \rangle + v_i') + \partial_i (\langle p \rangle + p')  = 0&\\
+          \partial_t \langle v_i \rangle + \partial_t v_i' + \langle v_j\rangle \partial_j \langle v_i\rangle + \langle v_j\rangle \partial_j v_i' + v_j' \partial_j \langle v_i\rangle + v_j' \partial_j v_i' + \partial_i \langle p\rangle + \partial_i p'= 0&
+          \end{align}\)
+          <p>Averaging this and cancelling averages of fluctuations, we reach</p>
+          \(\hspace{3cm}\partial \langle v_i\rangle + \langle v_j\rangle \partial_j \langle v_i\rangle + \langle v_j' \partial_j v_i'\rangle + \partial_i \langle p\rangle = 0\)
+          <p>Finally, by use of the continuity equation,</p>
+          \(\hspace{3cm}\partial_t \langle v_i \rangle + \langle v_j \rangle \partial_j \langle v_i \rangle + \partial_i \langle p \rangle = -\partial_j \langle v_j' v_i'\rangle\)
+          <p>We have reached an Euler equation for the average flows, but with the additional term of \(\partial_j \langle v_j' v_i' \rangle\). This term is the derivative of the Reynolds stress tensor and is responsible for the turbulent part of the flow.
+            Note that \(R_{ij} := \langle v_i' v_j'\rangle\) acts as a stress would but it is not a real stress, it is an artifact of averaging the nonlinearity in the Euler equation.
+          </p>
+
+          <h3>The Closure Problem</h3>
+          <p>For the Reynolds stress tensor in matrix form</p>
+          \(\hspace{2cm}R_{ij} = \langle v_i' v_j' \rangle = \begin{pmatrix}
+            \langle v_1'^2 \rangle & \langle v_1' v_2' \rangle & \langle v_1' v_3' \rangle\\
+            \langle v_2' v_1' \rangle & \langle v_2'^2 \rangle & \langle v_2' v_3' \rangle\\
+            \langle v_3' v_1' \rangle & \langle v_3' v_2' \rangle & \langle v_3'^2 \rangle
+          \end{pmatrix}\)
+          <p>there are 6 unknowns (due to symmetry). The closure problem arises when we count that we only have 4 equations (3 momentum and 1 continuity) in our system - we do not have enough information!</p>
+
+          <p>NOTE: MENTION K-THEORY W/ EDDY VISCOSITY, PRANDTL MIXING LENGTH, SMAGORINSKI SUBGRID SCALE MODELLING</p>
+
+          <h3>Reynold's Stress Equation</h3>
+          <p>We can find a transport equation for the Reynolds stress by first considering the fluctuation equation (Euler equations - Reynolds averaged Euler equations):</p>
+          \(\hspace{2cm}\begin{align}
+            \partial_t v_i + v_j \partial_j v_i + \partial_i p - \partial_t \langle v_i \rangle - \langle v_j \rangle \partial_j \langle v_i \rangle - \partial_i \langle p \rangle &= \partial_j R_{ij}\\
+            \partial_t v_i' + (\langle v_j\rangle + v_j') \partial_j (\langle v_i\rangle + v_i') - \langle v_j \rangle \partial_j \langle v_i \rangle + \partial_i p' &= \partial_j R_{ij}\\
+            \partial_t v_i' +  v_j' \partial_j \langle v_i\rangle + \langle v_j\rangle \partial_j v_i' + v_j' \partial_j  v_i' + \partial_i p' &= \partial_j R_{ij}\\
+            v_k' \partial_t v_i' +  v_k' v_j' \partial_j \langle v_i\rangle + v_k' \langle v_j\rangle \partial_j v_i' + v_k' v_j' \partial_j  v_i' + v_k' \partial_i p' &= v_k' \partial_j R_{ij}, &&\hspace{1cm}\text{multiplying by }v_k'.\\
+            \langle v_k'\partial_t v_i'\rangle +  R_{kj} \partial_j \langle v_i\rangle + \langle v_j\rangle\langle v_k'\partial_j v_i'\rangle + \langle v_k' v_j' \partial_j  v_i'\rangle + \langle v_k' \partial_i p'\rangle &= 0, &&\hspace{1cm}\text{averaging and cancelling averages of fluctuations.}\\
+          \end{align}\)
+          <p>Interchanging the free indices \(i\) and \(k\), we obtain the equation</p>
+          \(\hspace{2cm}\langle v_i'\partial_t v_k'\rangle +  R_{ij} \partial_j \langle v_k\rangle + \langle v_j\rangle\langle i'\partial_j v_k'\rangle + \langle v_i' v_j' \partial_j  v_k'\rangle + \langle v_i' \partial_k p'\rangle = 0\)
+          <p>and adding this to the previous equation, we arrive at the Reynolds stress equation,</p>
+          \(\hspace{2cm}\partial_t R_{ik} + \langle v_j\rangle\partial_j R_{ik} = -(\langle v_k' \partial_i p'\rangle + \langle v_i' \partial_k p'\rangle) - (\langle v_j' v_k' \partial_j v_i'\rangle + \langle v_i'v_j'\partial_j v_k'\rangle) - (R_{jk}\partial_j\langle v_i\rangle + R_{ij}\partial_j\langle v_k\rangle)\)
+          <p>NOTE: WHY DERIVE THIS???</p>
+        </section>
+
+        <section>
+          <h2>Subsolutions:</h2>
+          <p></p>
+        </section>
+
+        <section>
+          <h2>Techniques:</h2>
+          <h3>Schauder Estimates</h3>
+          <h3>Beltrami Flows</h3>
+          <h3>Mikado Flows</h3>
+
+        </section>
+
+        <section>
+          <h2>Nash's \(C^1\) Embedding Theorem:</h2>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        </section>
+
+        <section>
+            <h2>The h-principle in fluids:</h2>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        </section>
+    </div>
+  <footer class="footer">Contact me: nathangreen.nmg@gmail.com</footer>
+  </body>
+</html>

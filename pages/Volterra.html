@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volterra</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({CommonHTML: {scale: 100}});
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <script type="text/javascript" async src="../JS/Collapse.js"></script>
+  <header>
+    <nav>
+      <ul class="nav">
+        <li><a class="nav-bar" href="URSS.html#Volterra">Back</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="plasma-bg">
+    <section>
+        <h1>The Volterra Equation</h1>
+        <p>This page aims to solve the \(\mathbb{C}\)-valued Volterra integral (convolution) equation of the second kind:</p>
+        \(\hspace{3cm}\rho(t) = H(t) + \int_0^t K(t-\tau)\rho(\tau)~d\tau.\)
+        <p>We first make some statements on the Laplace transform:</p>
+        \(\hspace{3cm} \tilde{f}(z) = \int_0^\infty e^{-zt} f(t)~dt\)
+        <p>Note that for \(e^{-\mu t} f(t) \in L^1\cap L^2(\mathbb{R}_+)\), we can extend the Laplace transform to the half-plane \(\{ z = \sigma + i\tau \in\mathbb{C} : \sigma > \mu\}\).<br>
+        We can show a Laplace analogue of the Parseval identity by writing \(z=\sigma + i\tau\) and noting that</p>
+        \(\hspace{3cm}\tilde{f}(\sigma + i\tau) = \int_0^\infty e^{-i\tau t} e^{-\sigma t} f(t)~dt = \mathcal{F}[e^{-\sigma t}f(t)\mathbb{1}_{t>0}](\tau),\)
+        <p>and by the usual Parseval identity,</p>
+        \(\hspace{3cm}\int_{\sigma -i\infty}^{\sigma + i\infty} |\tilde{f}(z)|^2~dz = \int_{-\infty}^\infty |\tilde{\rho}(\sigma + i\tau)|^2 ~d\tau = \int_0^\infty |e^{-\sigma t}f(t)|^2 ~dt = \int_0^\infty e^{-2\sigma t}|f(t)|^2~dt\)
+
+        <p>We now return to solving the Volterra equation in the following lemma:<br>
+        <div class="lemma">
+          <b><i>Volterra Lemma:</i></b><br>
+          Assume that \(e^{-\mu t}H \in L^1 \cap L^2 (0,T)\) and that \(e^{-\mu t} K \in L^1 \cap L^2 (\mathbb{R}_+)\) for some \(\mu \in \mathbb{R}\) so that we may define their Laplace transforms in the appropriate half-plane.<br>Moreover, assume that</p>
+          \(\hspace{3cm} \inf_{z\in\mathbb{C}: \Re z>\mu}\left| 1-\tilde{K}(z) \right| \geq \kappa > 0\)
+          <p>and that for all \(\gamma > \mu, \tilde{K}(\gamma + i\cdot) \in L^1\). Then, there exists a unique solution \(\rho:[0,T) \rightarrow \mathbb{C} \) with \(e^{-\mu t}\rho \in L^2(0,T)\) and for all \(z\) with \(\Re z \geq \mu\), there holds the following (extending \(H\) by zero for \( t > T \)),</p>
+          \(\hspace{3cm} \tilde{\rho} (z) = \frac{\tilde{H}(z)}{1-\tilde{K}(z)},\)
+          <p>and</p>
+          \(\hspace{3cm}\|e^{-\mu t}\rho\|_{L_t^2 (0,T)}\lesssim \frac{1}{\kappa}\| e^{-\mu t} H\|_{L_t^2 (0,T)}.\)
+          <p>Furthermore, if we define</p>
+          \(\hspace{3cm}\tilde{R}(z) = \frac{\tilde{K}}{1-\tilde{K}},\)
+          <p>then we have the solution</p>
+          \(\hspace{3cm}\rho(t) = H(t) + \int_0^t R(t-\tau) H(\tau)d\tau, \)
+          <p>where \(|R(t)| \lesssim e^{\mu t/2}\).</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(145, 7, 145, 0.4); border: rgb(145, 7, 145) solid 1px;">proof:</button>
+        <div class="content">
+          <p>We start by taking the Laplace transform of the Volterra equation</p>
+          \( \hspace{3cm} \begin{align*}
+          \tilde{\rho}(z) &= \mathcal{L}\left[ H(t) + \int_0^t \mathcal{K} (t-\tau)\rho (\tau) ~d\tau \right]\\
+                          &= \tilde{H}(z) + \frac{1}{2\pi}\int_0^\infty \int_0^t e^{-zt} \mathcal{K} (t-\tau)\rho(\tau)~d\tau dt\\
+                          &= \tilde{H}(z) + \frac{1}{2\pi}\int_0^\infty \int_0^\infty \mathbb{1}_{\tau < t} e^{-z\tau} e^{-z(t-\tau)} \mathcal{K} (t-\tau)\rho(\tau)~dt d\tau\\
+                          &= \tilde{H}(z) + \frac{1}{2\pi}\int_0^\infty  e^{-zs} \mathcal{K} (s)~ds \int_0^\infty e^{-z\tau}\rho(\tau)~d\tau\\
+                          &= \tilde{H}(z) + 2\pi \tilde{\mathcal{K}}(z)\tilde{\rho}(z)
+          \end{align*} \)
+          <p>To go on to solve this form of the equation, we must take an inverse Laplace transform of \(\tilde{\rho}\). For this we need to prove that such a \(\rho\) does indeed exist. We shall do this by a fixed point theorem argument:<br>
+          Define \(F[\rho]\) by \(\tilde{F}[\rho](z) = \tilde{H}(z) + 2\pi \tilde{\mathcal{K}}(z)\tilde{\rho}(z)\) and, using the norm \(\|\cdot\| = \left(\int |\cdot|^2 e^{-2\gamma t}~dt\right)^{1/2}\) for some \(\gamma\), we can show that, under this norm, \(F\) is a contraction map:</p>
+          \( \hspace{3cm} \begin{align*}
+          \|F\left[\rho_1\right] - F\left[\rho_2\right]\|^2 &= \int_0^\infty |F\left[\rho_1\right](t) - F\left[\rho_2\right](t)|^2 e^{-2\gamma t}~dt\\
+          &= \int_{\gamma-i\infty}^{\gamma+i\infty} |\tilde{F}\left[\rho_1\right](z) - \tilde{F}\left[\rho_2\right](z)|^2 ~dz\\
+          &= |2\pi|^2 \int_{\gamma-i\infty}^{\gamma+i\infty} |\tilde{\mathcal{K}}(z)\tilde{\rho_1}(z) - \tilde{\mathcal{K}}(z)\tilde{\rho_2}(z)|^2 ~dz\\
+          &\leq |2\pi|^2 \int_{\gamma-i\infty}^{\gamma+i\infty} |\tilde{\mathcal{K}}(z)|^2 ~dz \cdot \int_{\gamma-i\infty}^{\gamma+i\infty} |\tilde{\rho_1}(z) - \tilde{\rho_2}(z)|^2 ~dz\\
+          &= |2\pi|^2 \int_0^\infty |\mathcal{K}(t)|^2 e^{-2\gamma t} ~dt \cdot \|\rho_1 - \rho_2 \|^2
+          \end{align*}\)
+          <p>and so for sufficiently large \(\gamma\) (s.t. \(|2\pi|^2\int |\mathcal{K}|^2 e^{-2\gamma\cdot} < 1\)), this \(F\) is a contraction map.
+            <br>By the contraction mapping theorem, there exists a unique \(\rho\) solving \(\rho = F[\rho]\) and hence the Volterra equation.
+            <br>We can now say that our solution has Laplace transform:</p>
+          \(\hspace{3cm}\tilde{\rho}(z) = \frac{\tilde{H}(z)}{1-2\pi\tilde{\mathcal{K}}(z)}\)
+          <p>and that</p>
+          \(\hspace{3cm} \|e^{-\mu t}\rho\|_{L^2_t(0,T)}^2 = \int_0^\infty |\rho(t)\mathbb{1}_{t < T}|^2 e^{-2\mu t}~dt = \int_\mathbb{R} |\widetilde{[\mathbb{1}_{T > t}\rho]}(z)|^2~dz\)
+          <p>From this, the kernel form of the solution can be found. [DO THIS!]</p>
+
+        </div>
+    </section>
+  </div>
+  <footer class="footer">Contact me: nathangreen.nmg@gmail.com</footer>
+</body>
+<script src="../Collapse.js"></script>
+</html>

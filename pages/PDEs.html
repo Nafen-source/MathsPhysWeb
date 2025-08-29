@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDEs</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({CommonHTML: {scale: 100}});
+</script>
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/javascript" async src="../JS/Collapse.js"></script>
+<body>
+  <header>
+    <nav>
+      <ul class="nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a class="nav-bar" href="URSS.html">Landau Damping</a></li>
+        <li><a class="nav-bar" href="Dissertation.html">Shape Memory Alloys</a></li>
+        <li><a class="nav-bar" href="Euler.html">Turbulent Flows</a></li>
+        <li><a href="Misc.html">Misc</a></li>
+        <li class="search">
+          <button class="search-btn">
+            Search
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="search-content">
+            <a href="#Sob">Sobolev Spaces</a>
+            <a href="#Simple">Simplifications</a>
+            <a href="#Nonlin">Return to Non-Linear</a>
+            <a href="#NonlinLand">Landau Damping</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <div class="neutral-bg">
+    <!--Introduction-->
+    <section>
+        <h1>Partial Differential Equations</h1>
+        <h3>Introduction</h3>
+        <p>This page exists to review my advanced PDEs course which, unfortunately, I did poorly in for the exam. I hope that by reviewing this subject, I can address any weaknesses and go further than what my course at Warwick offered. Furthermore, many of the subjects I am interested in rely on the content below and so I will use this page as reference for those projects.
+            These notes will be based on Felix Schulze's notes on elliptic PDEs; Charlie Elliott's notes which introduce Bochner spaces, parabolic and hyperbolic PDEs, and on gradient flows; and possibly on Marie-Therese Wolfram's notes on applications.</p>
+        
+        <h2 id="Sob">Sobolev Spaces:</h2>
+        <h3>Functional Analysis for PDEs</h3>
+        <p>A major goal in studying PDEs is to employ the methods of functional analysis. To identify why this is desired, we shall talk about the Poisson problem:<br>
+        For \(B = \mathbb{B}_1(0)\subset\mathbb{R}^d\) and \(f\in C^\infty(B)\), solve</p>
+        \(\hspace{3cm}\begin{cases}
+            -\Delta u = f, &\text{ on }B\\
+            u = 0, &\text{ on }\partial B.
+        \end{cases}\)
+        <p>If we reformulate this problem as a bounded linear functional on an appropriate function space, we can use the Riesz representation theorem to prove existence of a solution. That is,</p>
+        \(\hspace{1cm}f=-\Delta u \iff \int \phi f = -\int \phi\Delta u \iff \int \phi f = \int Du \cdot D\phi = (u, \phi)_{H^1_0}\)
+        <p>where \(\phi\in C^\infty_c(B)\) and we have used the fundamental lemma of the calculus of variations and integration by parts. By showing that the linear functional \(L(\phi) = \int f \phi\) is bounded, we can prove existence of solutions.</p>
+        <p>We now aim to show boundedness of \(L\) with respect to the \(H^1_0\) norm. By the Cauchy-Schwarz inequality:</p>
+        \(\hspace{2cm}|L(\phi)| = |\int f\phi| \leq \|f\|_{L^2(B)}\|\phi\|_{L^2(B)}\)
+        <p>It remains to show that there is a continuous inclusion \((C^\infty_0(B), \|\cdot\|_{H^1_0})\hookrightarrow L^2(B)\). This follows from the Poincaré discussed later.</p>
+        <p>It seems we are done. However, there is a slight problem which leads us to much more mathematics. That problem is best seen if we first state the Riesz representation theorem.</p>
+        <div class="theorem">
+        <p><b><i>Riesz Representation Theorem:</i></b><br>
+        Let \(H\) be a Hilbert space with inner product \((\cdot, \cdot)\) and consider a bounded linear functional \(L\in H^\ast\). There exists a unique \(u \in H\) s.t.</p>
+        \(\hspace{3cm}(u, \phi) = L(\phi), \hspace{.5cm}\text{for all }\phi\in H.\) 
+        <p>The map \(L\mapsto u: H^\ast \rightarrow H\) is an isometric linear isomorphism.</p>
+        </div>
+        <button type="button" style="border: black solid 1px;" class="collapsible">proof:</button>
+        <div class="content">
+            <p>First note that a closed subspace of a Hilbert space is a Hilbert space (it is still complete). Consider the closed subspace \(\ker(L) \subset H\) and take the orthogonal decomposition \(H = \ker(L)\otimes\ker(L)^\perp\).<br>
+            The space \(\ker(L)^\perp\) is at most one-dimensional. Indeed, given \(\phi,\psi\in \ker(L)^\perp\),</p>
+            \(\hspace{2cm} L(L(\phi)\psi - L(\psi)\phi) = 0, \text{ and so, } L(\phi)\psi - L(\psi)\phi \in \ker(L)\).
+            <p>Because \(\ker(L)^\perp\) is a linear subspace, \(L(\phi)\psi - L(\psi)\phi \in \ker(L)^\perp\).<br>
+                Hence, \(L(\phi)\psi - L(\psi)\phi \in ker(L)\cap\ker(L)^\perp = \{0\}\) and \(\phi,\psi\) are linearly dependent. <br>
+                Due to one-dimensionality, \(\ker(L)^\perp\) is spanned by a single element \(u\in H\).<br> FINISH!</p>
+        </div>
+        <p><b>PROBLEM:</b> The space \( (C^\infty_0(B), \| \cdot \|_{H^1_0}) \) is not complete. For example, take a cauchy sequence in \( (C^\infty_0, \|\cdot\|_{H^1_0}) \) that converges to \(x\mapsto 1-|x| \text{ in }L^2([-1,1])\).
+            By the continuous inclusion imposed by Poincaré, the sequence converges within \( (C^\infty_0(B), \| \cdot \|_{H^1_0}) \) but the limit is not in \(C^\infty_0(B)\).</p>
+        <p>This problem can be addressed by taking the completion of \( (C^\infty_c(B), \| \cdot \|_{H^1_0}) \) (called \(H^1_0\)) but this is rather abstract and can be done in an easier way.
+            Once this is done, the Riesz representation theorem gives the existence of a "weak" solution which is not necessarily in \(C^2\).</p>
+        
+        <h3>Weak Derivatives</h3>
+        <p>Weak derivatives, together with weak convergence (to be seen later), provide useful tools for dealing with averaging of solutions. This is due to their non-local behaviour - they are indeed global definitions.
+          Because of these tools, they prove very useful in dealing with low-regularity (non-smooth or even non-\(C^1\)) solutions. Throughout my projects, these ideas have cropped up in Landau damping when discussing low velocity-regularity solutions and in Turbulent flows when discussing weak solutions which often model these flows.
+          This is no surprise as both relate to non-linear PDEs and so one can expect complicated solutions. We discuss them on this page to build up tools for solving second-order linear (and non-linear) elliptic PDEs.<br>
+          We first define the following notation: Let \(\Omega\subset\mathbb{R}^d\). For \(u \in C^k(\Omega)\) a function and \(\alpha = (\alpha_1, \cdots, \alpha_d)\in\mathbb{N}^d\) a multi-index, we write</p>
+        \(\hspace{2cm} D^\alpha u := \frac{\partial^{|\alpha|} u}{\partial x_1^{\alpha_1} \cdots\partial x_d^{\alpha_d}}\)
+        <p>for \(|\alpha| \leq k\).</p>
+        <div class="definition">
+            <p><b><i>Definition of Weak Derivative:</i></b><br>
+            Let \(\Omega\subset\mathbb{R}^d\) be open, \(u\in L^1_\text{loc}(\Omega)\) and \(\alpha\) a multi-index. We say that \(v\in L^1_\text{loc}(\Omega)\) is a weak (partial) derivative of \(u\) corresponding to \(\alpha\) if</p>
+            \(\hspace{3cm}\int_\Omega u D^\alpha \phi~dx = (-1)^{|\alpha|}\int_\Omega v \phi~dx,\)
+            <p>for all \(\phi\in C^\infty_c(\Omega).\)</p>
+        </div>
+        <p>Note that such derivatives need not exist but when they do, they are unique.</p>
+        <div class="lemma">
+            <p><b><i>Uniqueness Lemma:</i></b><br>
+            Let \(\Omega\subset\mathbb{R}^d\) be open, \(u\in L^1_\text{loc}(\Omega)\) and \(\alpha\) a multi-index.<br>
+            If \(v_1,v_2\in L^1_\text{loc}(\Omega)\) are both weak derivatives of u corresponding to \(\alpha\), then \(v_1 = v_2\) as an element of \(L^1_\text{loc}(\Omega)\) (almost everywhere).</p>
+        </div>
+        <button type="button" style="border: black solid 1px;" class="collapsible">proof:</button>
+        <div class="content">
+            <p>Since \(v_1 \text{ and }v_2\) are both weak derivatives of u, we use linearity to obtain</p>
+            \(\hspace{3cm} \int_\Omega (v_1-v_2) \phi~dx = 0, \text{ for all }\phi\in C^\infty_c(\Omega).\)
+            <p>By the fundamental lemma of the calculus of variations, we achieve uniqueness.</p>
+        </div>
+        <p>We can now denote the defined weak derivatives by \(D^\alpha u\). It is noteworthy that these derivatives are not defined at a point (like their classical counterpart), but instead are a global definition of derivative.</p>
+        <p><b>Functions can be weakly differentiable, but not classically</b>.</p>
+        <button type="button" style="border: black solid 1px;" class="collapsible">show:</button>
+        <div class="content">
+          <p>One such example is the function \(u:(-1,1)\rightarrow\mathbb{R}\) defined by \(u(x) = x\chi_{(0,1)}\) whose weak derivative can be found as follows</p>
+          \(\hspace{3cm}\int_{(-1,1)} x\chi_{(0,1)}\phi'~dx = \int_{(0,1)}x\phi'~dx = -\int_{(-1,1)}\chi_{(0,1)}\phi~dx\)
+          <p>So \(u\) has weak derivative \(x\mapsto\chi_{(0,1)}(x):(-1,1)\rightarrow\mathbb{R}\). The classical derivative agrees with the weak derivative except at \(x=0\) where the classical derivative doesn't exist.</p>
+        </div>
+          
+          
+        <p><b>Being classically differentiable almost everywhere is insufficient for the existence of weak derivatives</b>.</p>
+        <button type="button" style="border: black solid 1px;" class="collapsible">show:</button>
+        <div class="content">
+          <p>Take the Heaviside step function \(H: (-1,1)\rightarrow\mathbb{R}\) defined by \(H(x)=\chi_{[0,1)}\) which is classically differentiable away from the origin, but has no weak derivatives.<br>
+          Indeed, if such weak derivatives existed, it must agree with the classical derivative where it is defined (from the definition of weak derivative, integration by parts on the LHS, and uniqueness). However,</p>
+          \(\hspace{2cm}\int_{(-1,1)}\chi_{[0,1)} \phi'~dx = \int_{[0,1)}\phi'~dx = \phi(1)-\phi(0) = -\phi(0)\\ \)
+          \(\hspace{2cm}\int_{(-1,1)/\{0\}} 0\cdot\phi~dx = 0.\)
+          <p>Thus, there is no weak derivative defined for all \(\phi\in C^\infty_c\).</p>
+        </div>
+        
+        <p><b>Continuity is neither sufficient nor necessary for existence of weak derivatives</b>.</p>
+
+
+        <p>What are the conditions for weak derivatives?</p>
+        <div class="lemma">
+            <p><b><i>Conditions for Weak Derivatives:</i></b><br>
+            Let \(d\geq 2\) and consider \(\Omega\subset\mathbb{R}^d\) open, and \(p\in\Omega\).
+            If \(u\in L^1_\text{loc}(\Omega)\cap C^1(\Omega \backslash \{p\})\), and \(Du\) is integrable on some neighbourhood of \(p\) in \(\Omega\),<br>
+            then \(u\) is weakly differentiable on the whole of \(\Omega\).</p>
+        </div>
+        <button type="button" style="border: black solid 1px;" class="collapsible">proof:</button>
+        <div class="content">
+            <p>We need to prove weak differentiability in an aritrary direction \(i\in \{1,\cdots, d\}\) (WLOG take the direction \(i=d\)).<br>
+            Denote the projection \(\hat{x} = (x_1, \cdots, x_{d-1})\) and similarly for the point \(p\).<br>
+            For each \(\hat{x}\neq\hat{p}\in\mathbb{R}^{d-1}\), the line \(L_\hat{x} = \{(\hat{x}, x_d): x_d\in\mathbb{R}\}\) doesn't pass through \(p\), by the assumptions, \(u\) is a \(C^1\) function along this line.
+            Integration by parts then gives</p>
+            \(\hspace{2cm}\int_{\Omega\cap L_\hat{x}} u D_d\phi~dx_d = -\int_{\Omega\cap L_\hat{x}}(D_d u) \phi~dx_d,\hspace{.5cm}\text{for all }\phi\in C^\infty_c (\Omega).\)
+            <p>Integrating along the \(\hat{x}\)-direction, and using the fact that \(\{\hat{x}=\hat{p}\}\) is a null set, we arrive at the desired result (this integration requires that \(d\geq 2\)).</p>
+        </div>
+        <p>Note that this can be generalised to the situation where there is a classical derivative away from a sufficiently small set and one which is integrable across this set.</p>
+        <p><b>A weakly differentiable function that is nowhere continuous:</b></p>
+        <p><b>A weakly differentiable function that is unbounded in any open set: <a href="https://math.stackexchange.com/questions/2806833/intuition-about-weakly-differentiable-functions">See</a></b></p>
+
+        <div class="lemma">
+            <p><b><i>Stacking Weak Derivatives Lemma:</i></b><br>
+            Let \(\Omega\subset\mathbb{R}^d\) be open, and \(\alpha,\beta\) multi-indices, such that \(u\in L^1_\text{loc}(\Omega)\) admits weak derivatives \(D^\alpha u\) and \(D^{\alpha + \beta} u\).<br>
+            Then \(D^\alpha u\) admits a weak derivative \(D^{\beta}(D^\alpha)u = D^{\alpha+\beta} u\).</p>
+        </div>
+        <button type="button" style="border: black solid 1px;" class="collapsible">proof:</button>
+        <div class="content">
+            <p>The goal is to prove that for an arbitrary \(\phi\in C^\infty_c (\Omega)\), we have</p>
+            \(\hspace{2cm}\int_\Omega (D^\alpha u) D^\beta \phi~dx = (-1)^{|\beta|}\int_\Omega (D^{\alpha + \beta}u)\phi~dx\)
+        </div>
+
+        <h3>Sobolev Spaces</h3>
+        <p>\(L^p\) spaces often characterise both grouped up and bounded properties of a function: \(x\mapsto \mathbb{1}_\mathbb{R} (x)\) lies in \(L^\infty \backslash L^1\ (\mathbb{R})\) (not grouped at all, but bounded) whereas \(x\mapsto\frac{1}{\sqrt{x}}\) lies in \(L^1 \backslash L^\infty([0,1])\) (grouped around the origin, but not bounded).<br>
+          Sobolev spaces, \(W^{k,p}\) generalise these \(L^p\) spaces to include the function's differentiability as an important property. For example \(x\mapsto |x|\) is in \(W^{1,p} \backslash W^{2,p}([-1,1])\) because it is only once weakly differentiable.
+          Because of this additional property, and due to these spaces being Banach, these spaces are ideal for studying partial differential equations. Note that \(W^{0,p} = L^p\).</p>
+        
+
+        <div class="definition">
+          <p><i><b>Sobolev Spaces:</b></i><br>
+            For \(\Omega\subset \mathbb{R}^d\) open, \(1\leq p \leq \infty\) and \(k\in\mathbb{N}\), we denote the Sobolev space \(W^{k,p}(\Omega)\) as the space of all \(L^p (\Omega)\)-functions, u,
+            such that for all multi-indices \(\alpha\) such that \(|\alpha| \leq k\), the weak derivative \(D^\alpha u\) exists and lies in \(L^p(\Omega)\). The Sobolev space, \(W^{k,p}(\Omega)\) has norm
+          </p>
+          \(\hspace{2cm} \|u\|_{W^{k,p}(\Omega)} := \begin{cases}
+            (\sum_{|\alpha| \leq k} \int_\Omega |D^\alpha u|^p~dx)^{1/p}, & \text{if } 1 \leq p < \infty \\
+            \max_{|\alpha| \leq k} \|D^\alpha u\|_{L^\infty(\Omega)}, & \text{if } p=\infty.
+          \end{cases}\)
+        </div>
+        <button type="button" style="border: black solid 1px;" class="collapsible">show:</button>
+        <div class="content">
+            <p>To show that this is a norm, we make use of the following isometric embedding: Let \(I_k := \{\alpha : |\alpha| \leq k\}\) be the index set of all multi-indices of order \(k\) or less. Define \(\Omega_k := \Omega \times I_k\) and equip it with the measure on the first element (elements of \(\Omega\)).<br>
+              We now have an embedding from \(W^{k,p}(\Omega)\) into \(L^p(\Omega_k)\) given by</p>
+            \(\hspace{2cm}u(x)\mapsto u^{(k)} (x,\alpha) := D^\alpha u(x)\)
+            <p>Thus we have the isometric embedding</p>
+            \(\hspace{2cm}\|u\|_{W^{k,p}(\Omega)} = \|u^{(k)}\|_{L^p(\Omega_k)}.\)
+            <p>Thus, all the properties that make \(W^{k,p}(\Omega)\) a norm can be found from the \(L^p(\Omega_k)\)-norm.</p>
+        </div>
+
+        <div class="lemma">
+          <p><b><i>Lemma:</i></b><br>
+            Under the embedding \(u(x)\mapsto u^{(k)} (x,\alpha)\) (see above definition), the Sobolev space \(W^{k,p}(\Omega)\) is a closed subspace of \(L^p (\Omega_k)\).
+          </p>
+        </div>
+        <button type="button" style="border: black solid 1px;" class="collapsible">proof:</button>
+        <div class="content">
+            <p></p>
+        </div>
+    
+        <h3>Mollifications</h3>
+
+        <h3>Tools for Weak Derivatives</h3>
+    </section>
+
+    <!--Embedding Theorems-->
+    <section>
+        <h2 id="Embed">Embedding Theorems:</h2>
+        <h3>Sobolev Embedding Theorem</h3>
+
+        <h3>Hölder Space</h3>
+
+        <h3>Morrey's Embedding Theorem</h3>
+
+        <h3 id="Poincare">Poincaré Inequality</h3>
+        <p>The Poincaré inequality is a cornerstone of analysis and PDE theory. It provides an inequality between the gradient of a \(W^{1,p}\)-function, and the function itself such that if we know a \(W^{1,p}\)-function never gets "too steep", we know has a finite "area" - at least over a finite-measured set. It was also crucial for the results in my dissertation.</p>
+        <div class="theorem">
+          <p><b><i>Poincaré Inequality:</i></b><br>
+          For any finite measure open subset \(\Omega\subset\mathbb{R}^n\), \(p\in[1,\infty]\) and</p>
+          \(\hspace{3cm} q\in\begin{cases}
+            [1,\frac{np}{n-p}], & \text{if } p\in [1,n),\\
+            [1,\infty), & \text{if } p = n,\\
+            [1,\infty], & \text{if } p > n.
+          \end{cases}\)
+          <p>there exists a constant \(C = C(n,p,q, |\Omega|)\in (0,\infty)\) such that for all \(u\in W^{1,p}_0 (\Omega)\), we have \(u\in L^q(\Omega)\) and</p>
+          \(\hspace{3cm} \|u\|_{L^q(\Omega)} \leq C\cdot \|Du\|_{L^p (\Omega)}.\)
+        </div>
+    </section>
+
+    <!--Compactness Theorems-->
+    <section>
+        <h2 id="Compact">Compactness Theorems:</h2>
+        <h3>Rellich-Kondrachov Compactness Theorem</h3>
+
+        <h3>Ehrling's Lemma</h3>
+
+        <h3>Hölder Space Embeddings</h3>
+
+        <h3>Weak Compactness</h3>
+
+        <div id="weak-comp" class="theorem">
+          <p><b><i>Weak Compactness:</i></b><br>
+          </p>
+        </div>
+    </section>
+
+    <!--Extensions and Traces-->
+    <section>
+        <h2 id="extension">Domains with Boundary:</h2>
+        <h3>Extension Operators</h3>
+
+        <h3>Approximations</h3>
+
+        <h3>Extending Previous Theorems</h3>
+
+        <h3>Trace Theorems</h3>
+
+        <h3>The Dual Space \(H^{-1}\)</h3>
+    </section>
+
+    <!--Existence of Solutions-->
+    <section>
+        <h2 id="existence">Existence of Solutions to Elliptic PDE:</h2>
+        <h3>Divergence-form and Weak Solutions</h3>
+
+        <h3>Boundedness and Coercivity of the Bilinear Form</h3>
+
+        <h3>Lax-Milgram</h3>
+
+        <h3>Examples</h3>
+
+        <h3>The Formal Adjoint</h3>
+
+        <h3>The Fredholm Alternative</h3>
+    </section>
+
+    <!--Regularity Theory-->
+    <section>
+        <h2 id="Reg">Regularity Theory:</h2>
+        <h3>Difference Quotients</h3>
+
+        <h3>Interior Regularity</h3>
+
+        <h3>Boundary Regularity</h3>
+    </section>
+
+    <!--Nonlinearity-->
+    <section>
+        <h2 id="Nonlinear">Nonlinear PDE:</h2>
+        <h3>Existence of a weak solution</h3>
+        <h3>Regularity of a weak solution</h3>
+    </section>
+  </div>
+  <footer class="footer">Contact me: nathangreen.nmg@gmail.com</footer>
+</body>
+<script src="../Collapse.js"></script>
+</html>

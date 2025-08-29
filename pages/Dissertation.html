@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shape Memory Alloys</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({CommonHTML: {scale: 100}});
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <script type="text/javascript" async src="../JS/Collapse.js"></script>
+  <body>
+    <header>
+      <nav id="NavBar">
+        <ul class="nav">
+          <li><a class="nav-bar" href="../index.html">Home</a></li>
+          <li><a class="nav-bar" href="URSS.html">Landau Damping</a></li>
+          <li><a class="nav-bar" href="Dissertation.html">Shape Memory Alloys</a></li>
+          <li><a class="nav-bar" href="Euler.html">Turbulent Flows</a></li>
+          <li><a class="nav-bar" href="Misc.html">Misc</a></li>
+          <li class="search">
+            <button class="search-btn">
+              Search
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="search-content">
+              <a href="#Direct">Direct Method</a>
+              <a href="#Quasi">Quasiconvexity</a>
+              <a href="#Rigid">Rigidity</a>
+              <a href="#Hulls">Semiconvex Hulls</a>
+              <a href="#ConvexInt">Convex Integration</a>
+              <a href="#Multi">Multi-Wells</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="material-bg">
+      <!--Material Science-->
+      <section>
+        <h1 class="title">Shape Memory Alloys</h1>
+        
+        <h2 id="Setup">Material Science:</h2>
+        <h3>Introduction</h3>
+        <div class="side-by-side-flex">
+          <p style="padding: 0px 0px 15px 15px;">Shape memory alloys (SMAs) exhibit an affect whereby, after being deformed, and once sufficient heat is applied, they return to their original undeformed shape. Some shape memory alloys have another effect called super elasticity where any bends in the material are immediately reverted. <br>
+          Beyond their interest to material scientists [<a href="https://pubs.acs.org/doi/10.1021/ja01349a004">1</a>, <a href="https://www.sciencedirect.com/science/article/pii/S0079642504000647">2</a>], there are many applications in engineering such as for vibration dampers which are useful for noise reduction in aerospace engineering or for reducing the effects of earthquakes on buildings in civil engineering 
+          [<a href="https://journals.sagepub.com/doi/10.1243/09544100JAERO211">3</a>, <a href="https://link.springer.com/chapter/10.1007/978-3-642-59768-8_4">4</a>, <a href="https://www.mdpi.com/1996-1944/14/22/6987">5</a>, <a href="https://www.mdpi.com/1996-1944/15/5/1723">6</a>];
+          for flexible glasses frames; and for light-weight actuators in robotics [<a href="https://link.springer.com/chapter/10.1007/978-3-642-20217-9_18">7</a>, <a href="https://journals.sagepub.com/doi/10.1177/1729881419886747">8</a>]. <br>
+          We however will stick to looking at the mathematics that goes into modelling these materials.</p>
+          <img style="position: relative; display: block; max-width: 80%; height: auto; margin: 0px 20px 20px 20px; bottom: 50px; border: gray solid 2px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);" src="../Graphics/Transition.png">
+        </div>
+
+        <p style="position: relative; bottom: 60px;">Above is an image of the cubic-orthorhombic transition in CuAlNi which was taken by Hanuš Seiner [<a href="https://www.sciencedirect.com/science/article/pii/S002076831100103X">9</a>] using optical microscopy. Note the inhomogeneous behaviour - the material on the left side is flat while the right side has an oscillatory pattern.
+        There are many other types of SMAs including Indium-Thallium, Nickel-Aluminium (which are cubic-tetragonal transitions modelled mathematically as will be seen later), Nickel-Titanium (or "Nitinol" which is a cubic-monoclinic transition), and even the fictional <a href="https://onepiece.fandom.com/wiki/Wapometal">Wapometal</a> from One Piece!</p>
+        
+        <div class="side-by-side-flex">
+          <img style="position: relative; display: block; max-width: 50%; height: auto; margin: 0px 20px 20px 20px; bottom: 30px; border: gray solid 2px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);" src="../Graphics/UnitCells.png">
+          <p style="padding: 0px 15px 15px 15px;">In solid materials, atoms are arranged into a <a href="https://home.iitk.ac.in/~sangals/crystosim/crystaltut.html">crystal lattice</a>, with the unit cells of this lattice taking on many forms. Core to the shape memory effect (SME) is a solid-solid transition from the <b>austenitic phase</b>
+            (one type of unit cell) above a critical temperature to the <b>martensitic phase</b> (many types of unit cell) below a critical temperature (the image on the right shows the unit cells in the cubic-tetragonal transition).
+            The larger number of variants of the unit cell of martensite corresponds to a breaking of the symmetry that the material enjoyed at higher temperatures.
+            Nucleation events cause these variants to collect into regions, that is, it is energetically favourable to group types of unit cells. Together these regions form a microstructure responsible for many macroscopic properties of the alloy including the shape memory effect. <br>
+            Provided that there is a certain relation between these variants, the regions connect nicely without relative diffusion of atoms (no macroscopic deformation results from this transition).</p>
+          </div>
+          
+        <h3>Energy Minimisation Setup</h3>
+        <p>Consider a volume of interest, called the reference domain, \(\Omega\subset\mathbb{R}^d\) which is open, bounded, connected.
+          By the Cauchy-Born rule [<a href="https://journals.sagepub.com/doi/10.1177/1081286507086898">10</a>], a macroscopic linear deformation \(u : \Omega\rightarrow\mathbb{R}^d\) can be applied to increase the energy density of the lattice within the reference domain to \(W(F,T) \geq 0\) where
+          \(F(x):=\nabla u(x)\) is the deformation gradient matrix and \(T\geq 0\) is the temperature of the reference domain (assumed to be homogeneous).<br>
+          This project covers the energy minimisation description of SMAs. The energy functional depends on the deformation gradient and the temperature, \(T\):<br></p>
+          \(\hspace{3cm}E[u, T] = \int_\Omega W(\nabla u(x), T)~dx\)
+        <p>As we expect the energy density, \(W\), to be non-negative, we can minimise the energy functional by taking deformation gradients within the kernel of the energy density \((~\nabla u \in K(T) := W_T^{-1}(0)~)\), and so, we need not know the exact form of \(W\).
+          We will make some assumptions on the form of \(W\) [<a href="https://link.springer.com/book/10.1007/b10191">11</a>] that will allow us to derive the "Multi-Well Inclusions" used to describe SMAs. These assumptions are the following:</p>
+        
+        <ul>
+          <li style="padding-bottom: 10px;">M1: Not performing a deformation must not increase the energy density:<br><br>
+          \(\hspace{3cm} W(Id, T) = 0\).</li>
+          <li style="padding-bottom: 10px;">M2: The energy density is invariant under a change of frame:<br><br>
+          \(\hspace{3cm} W(QF, T) = W(F,T)\) for all \(Q\in SO(d)\).</li>
+          <li style="padding-bottom: 10px;">M3: Performing symmetries of the crystal does not change the energy density:<br><br>
+          \(\hspace{3cm} W(FR_i, T) = W(F, T)\)<br><br>
+          for all \(R_i\) in the symmetry point group of the crystal.</li>
+          <li style="padding-bottom: 10px;">M4: Compressing or expanding the crystal lattice costs energy:<br><br>
+          \(\hspace{3cm} W(\alpha\cdot Id, T) > W(Id, T)\)<br><br>
+          where \(\alpha\in [0,\infty)\backslash \{1\}\) is the scaling factor of the deformation.</li>
+          <li style="padding-bottom: 10px;">M5: Infinite compression and infinite stretching both cost infinite energy:<br><br>
+          \(\hspace{3cm} \text{If }\det(F)\rightarrow 0\text{ or }|F|\rightarrow\infty, \text{ then }W(F,T)\rightarrow\infty\)<br><br>
+          where \(|\cdot|\) denotes the Frobenius norm on matrices.</li>
+        </ul>
+
+        <p>The multi-well kernels that are core to SMAs can be derived (surppressing \(T\) in the notation) from the energy density assumptions \((M2)\) and \((M3)\). Suppose that \(F \in K\), then \(QF R_i \in K\) for
+        \(Q \in SO(d)\) and \(R_i\) in the symmetry point group of the martensitic material. We denote the variants by \(U_i := F R_i\). Then we can write the
+        minimising set as a finite union of “Energy Wells”:</p>
+        \(\hspace{3cm} K = SO(d)U_1 \cup SO(d)U_2 \cup \cdots \cup SO(d)U_n.\)
+        <p>We may assume that the variants preserve orientation, and so \(\det(U_i) > 0\) for all \(i \in [1, n]\).
+        By polar decomposition we assume that the \(U_i\) are positive definite symmetric matrices (the remaining orthogonal matrix is absorbed into SO(d)).
+        The differential inclusions with this minimising set are called multi-well inclusions. The general problem for modelling SMAs is as follows:</p>
+          \(\hspace{3cm}\text{Solve}\hspace{.5cm}\begin{equation*}
+          \left\{
+          \begin{aligned}
+          &u\in W^{1,\infty}(\Omega; \mathbb{R}^{3}),\\
+          &\nabla u \in K(T).
+          \end{aligned}
+          \right.
+          \end{equation*}\)
+          \(\hspace{1cm}\text{where}\hspace{.5cm}\begin{equation*}
+          K(T) := \left\{
+          \begin{aligned}
+          &SO(3)Id,\hspace{.5cm}\text{if \(T\) exceeds the critical temperature,}\\
+          &\bigcup_{i=1}^n SO(3)U_i \hspace{.5cm}\text{if \(T\) is below the critical temperature}.
+          \end{aligned}
+          \right.
+          \end{equation*}\)
+        
+        <p>Deformations, \(u\), that satisfies this inclusion must be pointwise minimisers of our
+        energy functional. However, not all minimisers satisfy this differential inclusion exactly, there may be deformations that minimise the energy functional but only approximately
+        satisfy the differential inclusion.</p>
+
+        <p>For crystalline materials, we expect compact \(K\). This is a reasonable expectation due
+        to large deformations of \(\Omega\) causing large energy increases (boundedness) and due to the
+        expected continuity of the energy density, and because \(\{0\}\) is closed, \(K\) is also closed
+        (closed). The compactness then follows from the Heine-Borel theorem applied to \(\mathbb{R}^{d\times d}\).
+        Non-compact \(K\) also gives way to different theory [<a href="https://arxiv.org/abs/2205.00396">12</a>] but for the aims of this project,
+        will be largely ignored.</p>
+
+        <p>Before we return to material science and multi-well inclusions, we will introduce some mathematics that is used in proving existence of particular solutions.</p>
+      </section>
+
+      <!--Direct Method-->
+      <section>
+        <h2 id="Direct">The Direct Method:</h2>
+        <p>The direct method is used to prove existence of minimisers to functionals over a Banach space. However, this existence isn't free, the functional is required to be lower semicontinuous and coercive.
+          We will use the weak form of this method due to the strong form relying on compactness which is uncommon within a infinite-dimensional Banach space.</p>
+        <div class="definition">
+          <p><b><i>Weak Coercivity:</i></b><br>
+          A functional \(\mathcal{F}: X\rightarrow\mathbb{R}\cup\{\infty\}\) defined on a Banach space \(X\) is weakly coercive if the sublevel set</p>
+          \(\hspace{2cm}\{u\in X: \mathcal{F}[u] \leq M\}\text{ is sequentially weakly precompact for all }M\in\mathbb{R}.\)
+          <p>That is, any sequence in the sublevel set has a weakly converging subsequence in the ambient space, \(X\).</p>
+        </div>
+        <div class="definition">
+          <p><b><i>Weak Lower Semicontinuity:</i></b><br>
+          A functional \(\mathcal{F}: X\rightarrow\mathbb{R}\cup\{\infty\}\) defined on a Banach space \(X\) is weakly lower semicontinuous if</p>
+          \(\hspace{2cm}\mathcal{F}[u] \leq \liminf_{j\rightarrow\infty}\mathcal{F}[u_j]\)
+          <p>where \(u_j \in X\) is a sequence with a weak limit \(u\) in \(X\).</p>
+        </div>
+        <div class="theorem">
+          <p><b><i>The Weak Direct Method:</i></b><br>
+          Let \(X\) be a reflexive Banach space or a closed affine subset of such a space.<br>
+          Let \(\mathcal{F} : X \rightarrow \mathbb{R} \cup \{\infty\}\) be weakly coercive and weakly lower semicontinuous.<br>
+          Then \(\mathcal{F}\) obtains a minimum in \(X\).</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>If all the values of \(u\) yield infinite \(\mathcal{F}\), all values trivially minimise \(\mathcal{F}\) and we are done.<br>
+          Assume that there is a value, \(u\), which has finite \(\mathcal{F}\). We take a minimising sequence \(u_j \in X\) so that</p>
+          \(\hspace{3cm}\lim_{j\rightarrow\infty} \mathcal{F}[u_j] = m := \inf\{\mathcal{F}[u] : u\in X\} < \infty.\)
+          <p>Then there exists \(M \in \mathbb{R}\) such that \(\mathcal{F}[u_j] \leq M\) for all \(j \in \mathbb{N}\).<br>
+            By weak coercivity, there exists a weakly converging subsequence \(u_{j_k} \rightharpoonup u_\ast\) (due to .... \(u_\ast \in X\)) such that</p>
+          \(\hspace{3cm}\mathcal{F}[u_{j_k}] \rightarrow \mathcal{F}[u_\ast] \geq m.\)
+          <p>Our aim is to now show that \(\mathcal{F}\) achieves its infimum through the value \(u_\ast\). By weak lower
+          semicontinuity,</p>
+          \(\hspace{3cm}m \leq \mathcal{F}[u_\ast] \leq \liminf_{k\rightarrow\infty} \mathcal{F}[u_{j_k}] = \liminf_{j\rightarrow\infty} \mathcal{F}[u_{j}] = m.\)
+          <p>Thus, we have \(\mathcal{F}[u_\ast] = m\) for our desired minimum.</p>
+        </div>
+
+        <p>While this method gives existence of minimisers to many functional problems, in our material science setup, we do not wish to rely on the exact form of the energy functional \(E\).
+          Instead, we place two more restrictions on the energy density \(W\). These restrictions replace coercivity and lower semicontinuity.
+        </p>
+        <p><b><i>p-Coercivity Bound [<a href="https://link.springer.com/book/10.1007/978-3-319-77637-8">13</a>, page 28]:</i></b><br>
+        For a Carathéodory integrand \(h: \Omega \times \mathbb{R}^{d\times d} \rightarrow [0,\infty)\) (\(\text{i.e. } x \mapsto h(x, F) \text{ Lebesgue-measurable and } F \mapsto h(x, F) \text{ continuous}\)) which satisfies the p-coercivity bound</p>
+        \(\hspace{3cm}\mu |F|^p \leq h(x, F), \hspace{.5cm}(x,F)\in\Omega\times\mathbb{R}^{d\times d}, \hspace{.25cm} p\in(0,\infty)\)
+        <p>for some \(\mu > 0\). Then the corresponding integral functional, \(\mathcal{F}\), is weakly coercive on the sobolev space</p>
+        \(\hspace{3cm} W^{1,p}_g(\Omega;\mathbb{R}^d) := \{u\in W^{1,p}(\Omega; \mathbb{R}^d) : u|_{\partial\Omega} = g\},\)
+        <p>for \(g\in W^{1-1/p, p}(\partial\Omega; \mathbb{R}^d)\).</p>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>In order to show weak coercivity, we aim to show that any sequence \(u_j\subset W^{1,p}_g(\Omega; \mathbb{R}^d)\) with bounded functional</p>
+          \(\hspace{3cm}\sup_{j\in\mathbb{N}}\mathcal{F}[u_j] < \infty,\)
+          <p>is weakly precompact. We start by applying the p-coercivity bound to obtain</p>
+          \(\hspace{3cm}\mu\cdot \sup_{j\in\mathbb{N}}\int_\Omega |\nabla u_j|^p~dx \leq \mu\cdot \sup_{j\in\mathbb{N}}\mathcal{F}[u_j] < \infty.\)
+          <p>From this, we see that \(\sup_{j\in\mathbb{N}} \|\nabla u_j\|_{L^p} < \infty\).<br>
+            Set \(u_0 \in W^{1,p}_g(\Omega; \mathbb{R}^d)\) and so we have \(u_j-u_0 \in W^{1,p}_0(\Omega; \mathbb{R}^d)\) and \(\sup_{j\in\mathbb{N}} \|\nabla(u_j - u_0)\|_{L^p} < \infty\).<br>
+          Since \((u_j - u_0)|_{\partial \Omega} = 0\) is a \(W^{1,p}\)-function, we may apply the <a href="PDEs.html#Poincare">Poincaré inequality</a> to obtain,</p>
+          \(\hspace{2cm}\sup_j \|u_j\|_{W^{1,p}} \leq \sup_j \|u_j - u_0\|_{W^{1,p}} + \|u_0\|_{W^{1,p}} \leq C\cdot\sup_j \|\nabla(u_j - u_0)\|_{L^p} + \|u_0\|_{W^{1,p}} < \infty.\)
+          <p>Finally, by <a href="PDEs.html#weak-comp">weak compactness</a>, we have that the norm-bounded set \((u_j)\) is sequentially weak precompact.</p>
+        </div>
+
+        <p><b><i>Tonelli-Serrin [<a href="https://link.springer.com/article/10.1007/BF03014600">14</a>, <a href="https://www.jstor.org/stable/1993416">15</a>]:</i></b><br>
+          Let \(h:\Omega\times \mathbb{R}^{d\times d}\rightarrow [0,\infty)\) be Carathéodory such that</p>
+        \(\hspace{3cm} h(x,\cdot)\text{ is convex for almost every }x\in\Omega\)
+        <p>Then \(\mathcal{F}\) is weakly lower semicontinuous on \(W^{1,p}(\Omega;\mathbb{R}^d)\) for any \(p\in (0,\infty)\).</p>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>We first show that \(\mathcal{F}\) is strongly lower semicontinuous. Let \( u_j \rightarrow u\) in \(W^{1,p}(\Omega; \mathbb{R}^d)\) and so, \(\nabla u_j \rightarrow \nabla u\) in \(L^p (\Omega; \mathbb{R}^d)\).<br>
+          By LINK, there exists a (non-labelled) subsequence such that \(\nabla u_j \rightarrow \nabla u\), almost everywhere in \(\Omega\). <br>
+          By assumption, we have \(h(x, \nabla u_j(x)) \geq 0\). Using Fatou's lemma and \(h\) being Carathéodory,</p>
+          \(\hspace{2cm}\mathcal{F}[u] := \int_\Omega h(x,\nabla u(x))~dx \leq \liminf_{j\rightarrow\infty} \int_\Omega h(x,\nabla u_j(x))~dx = \liminf_{j\rightarrow\infty}\mathcal{F}[u_j].\)
+          <p>Since this holds for all subsequences, it follows for the original sequence and we have strong lower semicontinuity.</p>
+          <p>We now prove weak lower semicontinuity. Take \((u_j)\subset W^{1,p}(\Omega; \mathbb{R}^d)\) with weak limit \(u\) in \(W^{1,p}\). We wish to show that</p>
+          \(\hspace{2cm}\mathcal{F}[u] \leq \liminf_{j\rightarrow\infty} \mathcal{F}[u_j] =: \alpha.\)
+          <p>Taking a subsequence, we can assume that \(\mathcal{F}[u_j] \rightarrow \alpha\). By the Mazur lemma [LINK] we can find the convex combination</p>
+          \(\hspace{2cm}v_j = \sum_{n=j}^{N(j)}\theta_n^{(j)}u_n,\hspace{1cm}\text{where}\hspace{1cm}\theta_n^{(j)} \in [0,1]\text{ and }\sum_{n=j}^{N(j)}\theta_n^{(j)} = 1.\)
+          <p>such that \(v_j \rightarrow u\) in \(W^{1,p}\). As \(h(x, \cdot)\) is convex for almost every \(x\),</p>
+          \(\hspace{2cm}\mathcal{F}[v_j] = \int_\Omega h(x, \sum_{n=j}^{N(j)}\theta_n^{(j)}\nabla u_n(x))~dx \leq \sum_{n=j}^{N(j)} \theta_n^{(j)}\mathcal{F}[u_n].\)
+          <p>Since \(\mathcal{F}[u_n] \rightarrow \alpha\) as \(n\rightarrow \infty\) and \(\sum_{n=j}^{N(j)}\theta_n^{(j)} = 1\), we arrive at</p>
+          \(\hspace{2cm}\liminf_{j\rightarrow\infty} \mathcal{F}[v_j] \leq \alpha.\)
+          <p>From the strong lower semicontinuity, and since \(v_j \rightarrow u\) strongly, we obtain \(\mathcal{F}[u] \leq \liminf_{j\rightarrow \infty} \mathcal{F}[v_j]\). The end of the proof follows.</p>
+        </div>
+
+        <p>By switching to properties of the energy density, we have now steadily moved closer to a tool that can be used to study minimisers of the energy functional.
+          However, with these properties, we have introduced an issue that must be addressed: There is a contradiction between the assumptions about the energy density and the convexity we wish to impose upon it.
+        This is illustrated through considering a rotation of \(\pi/3\) radians about some axis represented by the matrix</p>
+        \(\hspace{3cm}Q = \frac{1}{2}\begin{pmatrix}
+          1 & -\sqrt{3} & 0 \\
+          \sqrt{3} & 1 & 0 \\
+          0 & 0 & I_{(d-2) \times (d-2)}
+        \end{pmatrix}\in SO(d).\)
+        <p>Suppressing the temperature parameter, we use convexity and \((M2)\) to compute</p>
+        \(\hspace{3cm}W(\frac{1}{2}Id) = W(\frac{1}{2}(Q+Q^T)) \leq \frac{1}{2}W(Q) + \frac{1}{2}W(Q^T) = W(Id)\)
+        <p>A clear contradiction to the assumption that compressions cost a larger energy \((M4)\).</p>
+
+        <p>We now know that we cannot use convexity, but we still desire lower semicontinuity. To remedy this issue, we need a weaker 'quasi' form of convexity that still guarantees lower semicontinuity.</p>
+      </section>
+
+      <!--Quasiconvexity-->
+      <section>
+        <h2 id="Quasi">Quasiconvexity:</h2>
+        <p>The notion of quasiconvexity was first introduced in 1952 by Charles B. Morrey Jr. [<a href="https://projecteuclid.org/journals/pacific-journal-of-mathematics/volume-2/issue-1/Quasi-convexity-and-the-lower-semicontinuity-of-multiple-integrals/pjm/1103051941.full">16</a>].
+        It was introduced to provide a necessary and sufficient condition on the integrand for the
+        functional to be weakly lower semicontinuous.</p>
+        <div class="definition">
+          <p><b><i>Quasiconvexity:</i></b><br>
+          A locally bounded Borel measurable function \(h : \mathbb{R}^{d\times d} \rightarrow \mathbb{R}\) is quasiconvex if</p>
+          \(\hspace{2cm}h(F) \leq \frac{1}{|\Omega|}\int_\Omega h(F+\nabla \psi(z))~dz\)
+          <p>for all \(F \in \mathbb{R}^{d\times d}\), all \(\psi \in W^{1,\infty}_0 (\Omega; \mathbb{R}^d)\), and for a bounded Lipschitz domain \(\Omega\subset\mathbb{R}^d\).</p>
+        </div>
+        <p>Note the physical intuition of this inequality: applying a continuously differentiable deformation, \(\psi\), to the
+        interior of a region, \(\Omega\), of the crystal will expectedly increase the average internal energy of the material.</p>
+        
+        <p>Quasiconvexity is notoriously difficult to prove in a function. It will be useful to introduce an even weaker notion of convexity called rank-one convexity.</p>
+        <p><b><i>Convexity Hierarchy:</i></b><br>
+        A locally bounded Borel measurable function \(h : \mathbb{R}^{d\times d} \rightarrow \mathbb{R}\) follows the hierarchy below</p>
+        \(\hspace{2cm}\text{Convexity} \overset{1}{\implies} \text{Quasiconvexity} \overset{2}{\implies} \text{Rank-One Convexity,}\)
+        <p>where rank-one convexity is defined through convexity along all rank-one lines:</p>
+        \(\hspace{2cm}h(tA + (1 - t)B) \geq th(A) + (1 - t)h(B)\)
+        <p>for \(A, B \in \mathbb{R}^{d\times d} \text{ with } \text{rank}(A - B) ≤ 1 \text{ and for all } t \in (0, 1)\).</p>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <ol>
+            <li style="padding-bottom: 10px;">
+              <p>Take \(F\in\mathbb{R}^{d\times d}\), \(V\in L^1(\Omega; \mathbb{R}^{d\times d}) \text{ with } \int_\Omega V = 0\), and define a measure, 
+              \(\mu\), by</p> 
+              \(\hspace{2cm}\langle h, \mu\rangle := \frac{1}{|\Omega|}\int_\Omega h(F + V(x))~dx \hspace{0.5cm}\text{for }h\in C_0(\mathbb{R}^{d\times d}).\)
+              <p>This measure is a probability measure as it is bounded \(|\langle h, \mu \rangle| \leq \|h\|_\infty\), it has positive \(\langle h, \mu\rangle\) (\(h\) shifted to be positive), and normalises as \(\langle \mathbb{1}, \mu \rangle = 1\).
+                Hence we write \(\mu\in\mathcal{M}^1(\mathbb{R}^{d\times d})\). Because the barycenter of \(\mu\) is</p>
+              \(\hspace{2cm}\left[\mu\right] = \langle Id, \mu\rangle = \frac{1}{|\Omega|}\int_\Omega F+V(x)~dx = F,\)
+              <p>and assuming that \(h\) is convex, apply Jensen's inequality to obtain</p>
+              \(\hspace{2cm}h(F) = h(\langle Id, \mu\rangle) \leq \langle h\circ Id, \mu\rangle = \frac{1}{|\Omega|}\int_\Omega h(F+V(x))~dx.\)
+              <p>Setting \(V(x) := \nabla \psi\) for some \(\psi\in W^{1,\infty}_0 (\Omega; \mathbb{R}^d)\), gives us the first statement.</p>
+            </li>
+            <li>
+              <p>Let \(A,B\in\mathbb{R}^{d\times d}\) be rank-one connected through \(B-A=a\otimes \hat{n}\) for \(a\in\mathbb{R}^d \backslash \{0\}\) a non-zero vector and \(\hat{n}\in\mathbb{S}^{d-1}\) a unit vector.<br>
+                Let \(Q_n\) be a cube centered at the origin such that \(|Q_n| = 1\) and \(\hat{n}\) is orthogonal to a face of the cube.<br>
+                Fix \(t\in(0,1)\), set \(F:= t A + (1-t) B\) and define \(u_j \in W^{1,\infty}_0(Q_n; \mathbb{R}^d)\) as the sequence of `jagged' functions
+              </p>
+              \(\hspace{2cm}u_j(x) = Fx + \frac{1}{j}\phi_0(jx\cdot \hat{n} - \lfloor jx\cdot \hat{n}\rfloor) a,\hspace{0.5cm}x\in Q_n\)
+              <p>where \(\phi_0 : [0,1] \rightarrow \mathbb{R}\) is defined by</p>
+              \(\hspace{2cm}\phi_0 (x) := \begin{cases}
+              -(1-t)x\hspace{0.25cm}&\text{if }x\in[0,t],\\
+              t x - t\hspace{0.3cm}&\text{if }x\in(t, 1].
+              \end{cases}\)
+              <p>The constructed sequence is called a laminate in the \(\hat{n}\) direction. We define the disjoint spaces:</p>
+              \(\hspace{2cm}\begin{align*}
+              D_{j,n,0} &= \{x\in Q_n : jx\cdot\hat{n} - \lfloor jx\cdot\hat{n} \rfloor \in [0,t]\}\\
+              D_{j,n,1} &= \{x\in Q_n : jx\cdot\hat{n} - \lfloor jx\cdot\hat{n} \rfloor \in (t,1]\}
+              \end{align*}\)
+              <p>Note that the gradient of this laminate takes on values in \(\{A,B\}\):</p>
+              \(\hspace{2cm}\begin{align*}
+              \nabla u_j \big|_{D_{j,n,0}} &= F + \nabla \left[-\frac{1}{j}(1-t)(jx\cdot\hat{n} - \lfloor jx\cdot\hat{n}\rfloor)\right]\otimes a \\ &= F - (1-t)a\otimes\hat{n} \\ &= t A + (1-t)B - (1-t)(B-A) = A,
+              \end{align*}\)
+              <p>and similarly, \(\nabla u_j \big|_{D_{j,n,1}} = B\). We also have \(u_j \overset{\ast}{\rightharpoonup} Fx\) in \(W^{1,\infty}\) due to \(\phi_0\) being uniformly bounded. In order to use the quasiconvexity of \(h\), we must first show that</p>
+              \(\hspace{2cm}u_j(x) - Fx = \frac{1}{j}\phi_0 (jx\cdot\hat{n}-\lfloor jx\cdot\hat{n} \rfloor)\)
+              <p>has compact support. To achieve this, we must find a function with the properties of \(u_j\), but which has boundary values of \(Fx\). This will be done through taking a sequence of convex combinations,</p>
+              \(\hspace{2cm}v_{j,k}(x) = \rho_k(x) u_j(x) + (1-\rho_k(x))Fx \hspace{0.2cm}\in\hspace{.2cm} W^{1,\infty}(Q_n; \mathbb{R}^d)\)
+              <p>with \((\rho_k)_k \subset C^\infty_c (Q_n; [0,1])\) such that \(\lim_{k\rightarrow\infty} |Q_n \backslash \rho_k^{-1}(1)| = 0\). That is \(\lim_{k\rightarrow\infty}v_{j,k} = u_j\) almost everywhere. Note that because \(\rho_k\) has compact support in \(Q_n\), \(v_{j,k}(x) = Fx\) close to the boundary \(\partial Q_n\). By the <a href="PDEs.html#Compact">Rellich-Kondrachov theorem</a>, \(W^{1,\infty}\) is embedded compactly within \(L^\infty\) and so \(u_j \overset{\ast}{\rightharpoonup}Fx\) in \(W^{1\infty} \implies u_j \rightarrow Fx\) in \(L^\infty\). It is now safe to compute the following,</p>
+              \(\hspace{2cm}\begin{align*}
+              &\nabla v_{j,k}(x) = (u_j(x)-Fx)\otimes \nabla \rho_k(x) + \rho_k(x)\nabla u_j (x) + (1-\rho_k(x))F,\\
+              &\limsup_{j\rightarrow\infty}\|\nabla v_{j,k}\|_{L^\infty} \leq 0 + \|\nabla u_j\|_{L^\infty} + |F| < \infty
+              \end{align*}\)
+              <p>because the \(\nabla u_j\) are \(L^\infty\)-bounded. Thus, \(\|\nabla v_{j,k}\|_{L^\infty}\) is eventually bounded independent of \(k\in\mathbb{N}\) and so we take a bounded subsequence \(\|\nabla v_{j(k),k}\|_{L^\infty}\). As \(h\) is locally bounded, we can bound</p>
+              \(\hspace{2cm}\| h(\nabla v_{j(k),k})\|_{L^\infty} + \| h(\nabla u_{j(k)})\|_{L^\infty} < L\)
+              <p>where \(L>0\) is a constant. By quasiconvexity, we now conclude by the following</p>
+              \(\hspace{2cm}\begin{align*}
+                h(tA + (1-t)B) = h(F) &\leq \frac{1}{|Q_n|}\int_{Q_n} h(\nabla u_{j(k)})\\
+                &= \int_{Q_n} h(\nabla v_{j(k),k}) + h(\nabla u_{j(k)}) - h(\nabla v_{j(k),k})\\
+                &= \int_{Q_n} h(\nabla v_{j(k),k}) + \int_{Q_n\backslash\rho_k^{-1}(1)} h(\nabla u_{j(k)}) - h(\nabla v_{j(k),k})\\
+                &\leq \int_{Q_n}h(\nabla v_{j(k),k}) + \int_{Q_n\backslash\rho_k^{-1}(1)}|h(\nabla u_{j(k)}) - h(\nabla v_{j(k),k})|\\
+                &\leq \int_{Q_n} h(\nabla v_{j(k),k}) + L|Q_n\backslash \rho_k^{-1}(1)|\\
+                &= \int_{D_{j,n,0}} h(\nabla v_{j(k),k}) + \int_{D_{j,n,1}} h(\nabla v_{j(k),k}) + L|Q_n\backslash \rho_k^{-1}(1)|\\
+                &\rightarrow th(A) + (1-t)h(B) + 0,\hspace{0.5cm}\text{as }k\rightarrow\infty.
+              \end{align*}\)
+              <p>Thus we have arrived at rank-one convexity, completing the proof.</p>
+            </li>
+          </ol>
+        </div>
+
+        <p>It is noteworthy that, in one dimension, both quasiconvexity and rank-one convexity reduce to convexity. It is generally unknown whether rank-one convexity is equivalent to
+        quasiconvexity, but in three dimensions and higher, they are distinct [<a href="https://www.cambridge.org/core/journals/proceedings-of-the-royal-society-of-edinburgh-section-a-mathematics/article/abs/rankone-convexity-does-not-imply-quasiconvexity/2E0BBDE4340DDDDE863F7C365C72C555">17</a>]. The remaining
+        case of two dimensions is an open problem known as Morrey's conjecture [<a href="https://www.researchgate.net/publication/268552722_A_counterexample_in_the_vectorial_calculus_of_variations">18</a>, <a href="https://scholar.lib.ntnu.edu.tw/en/publications/two-by-two-upper-triangular-matrices-and-morreys-conjecture-2">19</a>,
+        <a href="https://www.researchgate.net/publication/263507222_Some_evidence_in_favor_of_Morrey%27s_conjecture">20</a>, <a href="J. Voss, R. J. Martin, O. Sander, S. Kumar, D. M. Kochmann, and P. Neff, “Numerical approaches for investigating quasiconvexity in the context of morrey’s conjecture,”">21</a>].</p>
+
+        <div class="lemma">
+          <p><b><i>Lemma:</i></b><br>
+          If \(h: \mathbb{R}^{d\times d}\rightarrow \mathbb{R}\) is rank-one convex and there are \(M>0\), \(p\in [1,\infty)\) such that</p>
+          \(\hspace{3cm} h(F) \leq M(1 + |F|^p), \hspace{.5cm} F\in\mathbb{R}^{d\times d},\)
+          <p>then h has p-growth: \(|h(F)| \leq M(1+ |F|^p)\).</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Let \(R > 0\) and choose \(F_1\in\mathbb{R}^{d\times d}\) such that \(h(F_1) = \inf_{|A|\leq R} h(A)\). Let \(F_1,\cdots,F_{2^{d^2}}\) be the, not necessarily distinct, matrices obtained after flipping the sign of the elements within \(F_1\).<br>
+          Any two matrices that differ only by the sign of a single element, say at \((i,j)\), lie on the same rank-one line \(\mathbb{R}(e_i\otimes e_j)\). In full, these \(2^{d\times d}\) matrices average to zero and so, by rank-one convexity,</p>
+          \(\hspace{2cm}h(0) = h(\frac{1}{2^{d\times d}} \sum_{k=1}^{2^{d\times d}} F_k) \leq \frac{1}{2^{d\times d}} \sum_{k=1}^{2^{d\times d}} h(F_k).\)
+          <p>Then,</p>
+          \(\hspace{2cm}2^{d\times d} h(0) \leq (2^{d\times d} -1) \sup_{|A| \leq R} h(A) + \inf_{|A| \leq R} h(A).\)
+          <p>and so,</p>
+          \(\hspace{2cm}\begin{align}
+            -\inf_{|A|\leq R} h(A) &\leq (2^{d\times d} -1)\sup_{|A|\leq R} h(A) -2^{d\times d}h(0)\\
+            -h(A) &\leq M(2^{d\times d}-1)(1+R^p) - 2^{d\times d}h(0), \hspace{1cm}\text{ if }|A|\leq R.
+          \end{align}\)
+          <p>Thus, by increasing R, we can always find \(\tilde{M} = M(1+R^p) > 0\) so that</p>
+          \(\hspace{2cm}-h(A) \leq \tilde{M}(1+|A|^p), \hspace{1cm} A\in\mathbb{R}^{d\times d},\)
+          <p>and we have shown that \(h\) has p-growth.</p>
+        </div>
+
+        <p>ADD LEM 5.2 ii - p-growth allows W 1,p</p>
+        <div class="lemma">
+          <p><b><i>Lemma:</i></b><br>
+            If \(h\) has p-growth for some \(p\in[1,\infty)\) and \(M>0\) then,<br>
+            in the definition of quasiconvexity, we may test with all \(\psi\in W^{1,p}_0(\Omega; \mathbb{R}^d)\) instead of all \(\psi\in W^{1,\infty}_0(\Omega; \mathbb{R}^d)\).</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Hello</p>
+        </div>
+        
+
+        <p>We now arrive at Acerbi and Fusco's 1984 simplification of the proof of lower semicontinuity from quasiconvexity [<a href="https://link.springer.com/article/10.1007/BF00275731">22</a>].</p>
+        
+        <div class="theorem">
+          <p><b><i>Morrey-Acerbi-Fusco Theorem:</i></b><br>
+            For \(p \in (1, \infty)\) and \(h : \Omega \times \mathbb{R}^{d\times d} \rightarrow \mathbb{R}_{\geq 0}\) a Carathéodory function with p-growth such that</p>
+            \(\hspace{2cm}F \mapsto h(x, F) \text{ is a.e. quasiconvex, }\)
+          <p>the functional \(F \mapsto \int_\Omega h(x,F)~dx\) is then weakly lower semicontinuous on \(W^{1,p}(\Omega; \mathbb{R}^d)\).</p>
+        </div>
+
+        <p>At this point in my dissertation, due to a page limit, I omitted the proof in favour of introducing Young measures which are a crucial tool in proving this theorem.<br>
+        Here, I will confine <a id="YoungMeas" class="hoverable" href="YoungMeasure.html" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">Young measures<span class="hoverableText">Howdy</span></a> to another page and proceed with the proof.</p>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Hello</p>
+        </div>
+
+        <p>NOTE: CHECK SOBOLEV SPACES W/ \(p=\infty\) or not</p>
+
+        <div class="theorem">
+          <p><b><i>The Quasiconvex Direct Method:</i></b><br>
+          For \(p\in (1,\infty)\), let \(h(x, \cdot)\) satisfy a p-coercivity bound, a p-growth bound and be quasiconvex for all \(x\in\Omega\),<br>
+          then its corresponding integral functional, \(\mathcal{F}\), obtains a minimum in \(W^{1,p}(\Omega; \mathbb{R}^d)\).</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Recall that \(W^{1,p}(\Omega; \mathbb{R}^d),p\in (1,\infty)\) is a reflexive Banach space and so, after obtaining weak coercivity and weak lower semicontinuity, we apply the weak direct method to conclude this result.
+            In order to obtain weak coercivity and weak lower semicontinuity, we invoke the propersition from the previous section and the Morrey-Acerbi-Fusco Theorem.</p>
+        </div>
+
+        <p>This form of the direct method has it's uses but, like with convexity, imposing a p-growth bound on the integrand has its own problems with the assumptions of our material \((M1-5)\).<br>
+        In particular, contradictions with \((M5)\) arise when considering the deformation gradient represented by the matrix</p>
+        \(\hspace{3cm}F_a := \begin{pmatrix}
+          1 & 0 \\
+          0 & a
+        \end{pmatrix},\hspace{.5cm}a > 0.\)
+        <p>This matrix is such that as \(a \downarrow 0\), we have \(\det(F_a) \downarrow 0\) and \(|F_a| \rightarrow 1\).<br>
+        From \((M5)\), we expect that \(W(F_a)\rightarrow \infty\) however, due to the p-growth bound, \(|W(F_a)| \leq M(1+|F_a|^p) \rightarrow 2M\) a clear contradiction.</p>
+        <p>The problem of removing the p-growth bound from the assumptions of the Morrey-Acerbi-Fusco theorem is still an open one.
+          We can, however, slightly strengthen our notion of quasiconvexity to the so called polyconvexity. Introduced by Ball [23] in YEAR, this notion lies between convexity and quasiconvexity in the hierarchy.
+        Polyconvexity opened up the problem of proving existence of minimisers to many real world functionals in nonlinear elasticity theory (See Mooney-Rivlin and Ogden materials [24 , 25]).</p>
+      </section>
+
+      <!--Rigidity-->
+      <section>
+        <h2 id="Rigid">Rigidity:</h2>
+        <p>When we set up the differential inclusion used in material science, we discussed how not every functional minimiser satisfies the inclusion exactly - some only approximately.
+          Nevertheless, deviations of the gradient from the kernel can be treated as perturbations from exact solutions. The form of minimisers can thus be studied through solutions to the differential inclusion.</p>
+        
+        <p>NOTE: ZHANGS LEMMA</p>
+
+        <p>A lack of rigidity in a differential inclusion allows solutions to have a low regularity, rapidly oscillating between gradients within the kernel.</p>
+
+        <div class="definition"><p><b><i>Exact Rigidity:</i></b><br>
+          Exact solutions, \(u \in W^{1,\infty}(\Omega; \mathbb{R}^d)\), to a differential inclusion have gradients that lie
+          in \(K\) almost everywhere in \(\Omega\). <br>
+          A differential inclusion is called “Rigid for exact solutions” if all exact solutions are affine linear.
+        </p>
+        </div>
+
+        <div class="definition"><p><b><i>Approximate Rigidity:</i></b><br>
+          Approximate solutions are uniformly norm bounded sequences \((u_j) \subset W^{1,\infty}(\Omega; \mathbb{R}^d)\) such that</p>
+          \(\hspace{3cm}\text{dist}(\nabla u_j, K) \rightarrow 0\hspace{.5cm}\text{in measure.}\)
+          <p>That is, for every \(\varepsilon > 0\),</p>
+          \(\hspace{3cm} \left|\{x\in\Omega : \text{dist}(\nabla u_j, K) > \varepsilon\}\right| \rightarrow 0\)
+          <p>A differential inclusion is called “Rigid for approximate solutions” if for all approximate solutions \((u_j) \subset W^{1,\infty}(\Omega; \mathbb{R}^d)\) such that</p>
+          \(\hspace{2cm}u_j \overset{\ast}{\rightharpoonup} u \in W^{1,\infty}(\Omega; \mathbb{R}^d) \hspace{.5cm}\text{ and }\hspace{.5cm} u_j|_{\partial\Omega} = Fx\text{ for some } F\in\mathbb{R}^{d\times d}\)
+          <p>it holds that</p>
+          \(\hspace{3cm}\nabla u_j \rightarrow \nabla u\text{ in measure}\hspace{.5cm}\text{ and }\hspace{.5cm}\nabla u = \text{const} = F.\)
+        </p>
+        </div>
+        
+        <p><br>For now, we focus our efforts on the smallest non-trivial model: the Two-gradient toy model, which will provide insightful theory on the properties that allow microstructure to form.</p>
+        <h3>The Two-Gradient Inclusion</h3>
+        <p>Consider the differential inclusion with a two-element kernel,</p>
+        \(\hspace{3cm}
+        \begin{cases}
+            u\in W^{1,\infty}(\Omega; \mathbb{R}^d),\\
+            \nabla u \in \{A,B\} \text{ in }\Omega
+        \end{cases}\)
+
+        <p>The key property is the rank-one connection between \(A\) and \(B\). That is,</p>
+        <ul>
+          <li><p>If \(\text{rank}(B-A) \leq 1\), \(A\) and \(B\) are said to be rank-one connected.<br>
+            Note this is equivalent to \(B-A = \mathbf{a}\otimes \mathbf{n} = \mathbf{a}\mathbf{n}^T\) for \(\mathbf{a}\in\mathbb{R}^d\) and \(\mathbf{n}\in\mathbb{S}^{d-1}\). Indeed,</p>
+          \((\impliedby)\hspace{.5cm}\text{For }\mathbf{v}\in\mathbb{R}^d,\hspace{.5cm} (B-A)\mathbf{v} = (\mathbf{a}\mathbf{n}^T)\mathbf{v} = (\mathbf{n}\cdot \mathbf{v}) \mathbf{a}  \implies \text{rank}(B-A) \leq 1\\
+          (\implies)\hspace{.5cm}\text{For }\mathbf{e_i}\text{ the basis vectors,}\hspace{.5cm}(B-A)\mathbf{e_i} = k_i \mathbf{v}\hspace{.5cm}\text{for }k_i\in\mathbb{R}, \mathbf{v}\in\mathbb{R}^d\hspace{.5cm}
+          \text{and so,}\hspace{.5cm}B-A = (k_1 \mathbf{v}\hspace{.2cm} k_2 \mathbf{v}\cdots k_d \mathbf{v}) = \mathbf{v}\otimes \mathbf{k}\)</li>
+          <li><p>If \(\text{rank}(A-B) \geq 2\), \(A\) and \(B\) are said to be not rank-one connected.</p></li>
+        </ul>
+        
+        <div class="theorem">
+          <p><b><i>The Ball-James Theorem [<a>26</a>]:</i></b><br>
+            For \(A,B \in \mathbb{R}^{d\times d}\) and for \(\Omega\) an open, bounded and connected subset of \(\mathbb{R}^d\),<br>
+          <b>\(\hspace{.5cm}1.\)</b> If \(A\) and \(B\) are not rank-one connected, then the two-gradient inclusion is rigid for both exact and approximate solutions.<br>
+          <b>\(\hspace{.5cm}2.\)</b> If \(A\) and \(B\) are rank-one connected then, for \(\Omega\) additionally convex, the two-gradient inclusion is not rigid for exact nor approximate solutions.</p>
+        </div>
+        <div style=" position: relative; left: 30ch; display: flex; flex-direction: row; justify-content: space-between; width: 65ch; padding: 10px; border: gray solid 2px;">
+          <img style="width: 30ch;" src="../Graphics/RigidTwoPoint.png">
+          <img style="width: 30ch;" src="../Graphics/NonRigidTwoPoint.png">
+        </div>
+        <p></p>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Throughout this proof, we can make a simplification without loss of generality: Translate
+          the set K = {A, B} into {A, 0}.</p>
+          <p><b>\( 1)\hspace{.5cm} \) </b> For the non-rank-one connected case (rank\((A) > 1\)), we start with the exact solutions.<br>
+          Consider \(u\) to have a gradient \(\nabla u = Ag\) for some function \(g : \Omega\rightarrow\mathbb{R}\). Through
+          mollification, we assume further that both \(u\) and \(g\) are sufficiently smooth.<br>
+          The goal is to show that \(g\) is a constant so that \(u\) is affine. We do this through
+          taking the gradient of \([\nabla u]^k_j = A^k_j g\) and remembering that \(u\) is sufficiently smooth as follows:</p>
+          \(\hspace{2cm} A^k_j \partial_i g = \partial_i [\nabla u]^k_j = \partial_i \partial_j u^k = \partial_j \partial_i u^k = A^k_i \partial_j g.\hspace{1cm}(\ast)\)
+          <p>If \(g\) is constant, we have that \(u\) is affine and so we are done. Suppose instead that \(g\) is not constant such that there exists a point \(x\in\Omega\) with \(\zeta(x) := \nabla g(x) \neq 0\).<br>
+          Defining \(a^k (x) := A^k_j / \zeta_j(x)\) for any \(j\) such that \(\zeta_j(x) \neq 0\), which is well-defined through \((\ast)\), we can write</p>
+          \(\hspace{2cm} A = a(x)\otimes \zeta(x).\)
+          <p>Thus giving the contradiction \(1 < \text{rank}(A) \leq 1\); proving that \(g\) is constant. Due to \(\Omega\) being connected, we have that \(u\) is affine.</p>
+          
+          <P>Now that the exact solutions have been dealt with, we move onto proving rigidity for the approximate solutions. Because rank\((A) > 1\), there exists a non-zero \((2 \times 2)\)-submatrix
+            determinant of \(A\) which we call \(M \in \mathbb{R}^{2\times 2}\).<br>
+          Consider the half-space of values of \(\Omega\) with \(\nabla u_j (x)\) closer to \(A\) than to \(B = 0\),</P>
+          \(\hspace{2cm}D_j := \left\{ x\in\Omega : |\nabla u_j(x) - A| < \frac{1}{2}|A| \right\}.\)
+          
+          <p>Since dist\(( \nabla u_j , \{A, 0\}) \rightarrow 0\) in measure, \(\nabla u_j - A\mathbb{1}_{D_j} \rightarrow 0\) in measure.<br>
+          Consider, further, a subsequence (not made explicit) such that \(\mathbb{1}_{D_j}\overset{\ast}{\rightharpoonup}\chi\) in \(L^\infty\). (WHY CAN WE ASSUME THIS?)<br>
+          For \(w \in L^1(\Omega)\) and \(\epsilon > 0\), compute
+          Z
+          Ω
+          (∇uj (x) − A1Dj )w dx =
+          Z
+          {|∇uj −A1Dj |>ε}∪{|∇uj −A1Dj |<ε}
+          (∇uj (x) − A1Dj )w dx
+          ≤ ∥∇uj − A1Dj ∥L∞
+          Z
+          {|∇uj −A1Dj |>ε}
+          w dx + ε∥w∥L1
+          → 0 + ε∥w∥L1 as j → ∞.
+          Taking ε > 0 arbitrarily small, we get ∇uj − A1Dj
+          ∗
+          ⇀ 0 in L∞. We can now say
+          ∇uj = (∇uj − A1Dj ) + A1Dj
+          ∗
+          ⇀ Aχ in L∞.
+          By the weak* sequential continuity of submatrix determinants, in L∞,
+          ∇uj
+          ∗
+          ⇀ Aχ =⇒ M (∇uj ) ∗
+          ⇀ M (Aχ) = M (A)χ2.
+          We also compute, similarly to above, M (∇uj ) − M (A)1Dj
+          ∗
+          ⇀ 0 in L∞. Now,
+          M (∇uj ) = (M (∇uj ) − M (A)1Dj ) + M (A)1Dj
+          ∗
+          ⇀ M (A)χ.
+          By uniqueness of limits, M (A)χ2 = M (A)χ and due to M (A)̸ = 0, we have that
+          χ ∈ {0, 1}. Indeed, χ = 1D and ∇u = A1D for some D ⊂ Ω. Since 1Dj
+          ∗
+          ⇀ 1D in
+          15
+          L∞, for 1Ω ∈ L1
+          ∥1Dj ∥2
+          L2 =
+          Z
+          1Ω1Dj dx →
+          Z
+          1Ω1D dx = ∥1D∥2
+          L2 .
+          So ∥1Dj ∥L2 → ∥1D∥L2 which, by the Radon-Riesz property of Lp-spaces [28] gives
+          the strong convergence 1Dj → 1D in L2. Hence, we have 1Dj → 1D in measure and
+          so
+          ∇uj = (∇uj − A1Dj ) + A1Dj → 0 + A1D = ∇u in measure.
+          As the sequence uj is an approximate solution, ∇u ∈ {A, 0} almost everywhere in
+          Ω and, using the exact case, we reach our result for this subsequence. This does not
+          change with different subsequences as we assumed weak* convergence of the solution.</p>
+          <p>2) We now have A = a ⊗ ˆn and once again assume that ∇u = Ag. Computing a
+          directional derivative in a direction, v, orthogonal to ˆn,
+          d
+          dtu(x + tv) t=0
+          = ∇u(x) · v = Ag(x) · v = [aˆnT ]vg(x) = a[ˆnT v]g(x) = 0,
+          we see that u is constant in any direction orthogonal to ˆn. As Ω is assumed convex,
+          g only depends on x · ˆn and we may write g(x) = h′(x · ˆn) such that
+          ∇u(x) = Ah′(x · ˆn).
+          Due to ∇u ∈ {A, 0}, we have h′(x · ˆn) ∈ {1, 0} and so our exact solutions are of the
+          form
+          u(x) = v0 + h(x · ˆn)a.
+          We note that exact solutions need not be affine and so the two-gradient inclusion is
+          not rigid</p>
+        </div>
+
+        <p>Larger minimising sets, \(K\), such as the \(N\)-gradient inclusions have similar rigidity results:</p>
+        <ul>
+          <li><p>For \(N=3\), rigidity of exact and approximate solutions is maintained when there are no rank-one connections. This result is due to Šverák [SVER].</p></li>
+          <li><p>For \(N=4\), exact solutions maintain rigidity [T4] however, approximate solutions can now fail to be rigid. One example of this is the <a id="Tartar" class="hoverable" href="Tartar.html" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">Tartar square \(T_4\)<span class="hoverableText"></span></a> configuration of four gradients with none of the pairs having rank-one connections. This gives a non-rigid approximate solution through successively taking rank-one approximations to each gradient and taking a limit.</p></li>
+          <li><p>And for \(N=5\), even if there are no rank-one connections, rigidity is not promised for exact or approximate solutions. This result is due to Preiss and Kirchheim [kirchheimmax].</p></li>
+        </ul>
+        <p>To study more complex problems than the N-gradient inclusions, such as the multi-well inclusions that appear in material science, we must introduce both the quasiconvex hull of \(K\) in order to analyse the rigidity of approximate solutions, and convex integration to analyse the rigidity of exact solutions.</p>
+      </section>
+
+      <!--Hulls-->
+      <section>
+        <h2 id="Hulls">The Semiconvex Hulls:</h2>
+        <p>Certain Young measures give way to the quasiconvex hull of \(K\) which has a strong connection to the rigidity of approximate solutions.
+
+        <div class="definition">
+          <p><b><i>The Quasiconvex Hull:</i></b><br>
+            The quasiconvex hull of a set, \(K\), is
+          </p>
+          \(\hspace{2cm}K^{qc}:= \{[\mu]: \mu\in\mathcal{M}^{qc}(K)\}\)
+          <p>where the set of measures is</p>
+          \(\hspace{2cm}\begin{align*}
+            \mathcal{M}^{qc}(K) :&= \{\mu \in GY^{\infty}(\Omega; \mathbb{R}^{d\times d}) : \mu\text{ is homogeneous, }\text{supp}(\mu) \subset K\}\\
+            &= \{\mu \in \mathcal{M}^1(K) : h([\mu]) \leq \int h~d\mu\text{ for all }h\in C(\mathbb{R}^{d\times d})\text{ quasiconvex}\}.
+            \end{align*}\)
+          <p>That is we define \(\mathcal{M}^{qc}(K)\) as the set of homogeneous gradient Young measures with support in \(K\).
+            The second equality follows from the Kinderlehrer-Pedregal Theorem [<a>X</a>, <a>X+1</a>].</p>
+        </div>
+
+        <p>These quasiconvex hulls allow us to obtain a further rigidity result as shown below.</p>
+
+        <div class="lemma">
+          <p><b><i>Lemma:</i></b><br>
+          The differential inclusion</p>
+          \(\begin{equation}
+          \begin{cases}
+              u\in W^{1,\infty}(\Omega; \mathbb{R}^d),\hspace{0.5cm} K\subset\mathbb{R}^{d\times d}\text{ non-empty and compact,}\\
+              \nabla u \in K \text{ in }\Omega,
+          \end{cases}\tag{DI 2}
+          \end{equation}\)
+          <p>is rigid for approximate solutions if and only if \(\mathcal{M}^{qc}(K)\) consists only of Dirac masses.</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Hello</p>
+        </div>
+
+        <p>The proof will be left to~\cite[Page 195]{Rindler}.</p>
+
+        <p><b><i>Remark:</i></b><br>
+          Returning briefly to the two-gradient inclusion with \(K := \{A,B\}\) having no rank-one connections, the only measures with support in \(K\) are \(\delta_A\) and \(\delta_B\).
+          Thus, all elements of \(\mathcal{M}^{qc}(K)\) are Dirac masses, and so there is approximate rigidity, indeed, \(K = K^{qc}\).
+          This reasoning fails for \(K_{T_4}\). This is due to the construction of an approximate solution involving a sequence that generates a non-Dirac mass in \(\mathcal{M}^{qc}(K)\), and so \(K_{T_4}\subsetneq K_{T_4}^{qc}\) with a lack of approximate rigidity.</p>
+        
+        <p>To consider a lack of approximate rigidity, we must have \(K\subsetneq K^{qc}\). So we fix the deformation on the boundary by an element \(F\in K^{qc}\), and we have the differential inclusion:</p>
+        \(\begin{equation}
+            \begin{cases}
+            u\in W_{Fx}^{1,\infty}(\Omega; \mathbb{R}^d),\\
+            \nabla u \in K \text{ in }\Omega.
+        \end{cases}\tag{DI 3}
+        \end{equation}\)
+        
+        <p>In order to show that the quasiconvex hull is strictly larger than \(K\), and hence showing a lack of approximate rigidity, we must introduce other hulls which bound \(K^{qc}\) from below.</p>
+        <div class="definition">
+          <p><b><i>The Lamination Convex Hull:</i></b><br>
+            Consider a non-empty and compact set \(K\subset\mathbb{R}^{d\times d}\). We inductively define
+          </p>
+          \(\hspace{2cm}\begin{align*}
+            &K^{lc,0} := K,\\
+            &K^{lc,i+1} := \{tA + (1-t)B : A,B\in K^{lc,i}\text{ are rank-one connected, and }t\in[0,1]\}.
+          \end{align*}\)
+          <p>The lamination convex hull is then</p>
+          \(\hspace{2cm}K^{lc} := \bigcup_{i=0}^\infty K^{lc,i}.\)
+        </div>
+
+        <p>In some cases, such as the \(T_4\) configuration, \(K^{lc} = K\) and so we have failed to show that \(K\subsetneq K^{qc}\). The reason is often due to a limiting process in finding an approximate solution, and so we consider the laminates of infinite order.</p>
+
+        <div class="definition">
+          <p><b><i>The Rank-One Convex Hull:</i></b><br>
+          Introducing infinitely many lamination steps, we define the laminates of infinite order,</p>
+          \(\hspace{2cm}\begin{align*}
+            \mathcal{M}^{rc}(K) :&= \{\mu\in\mathcal{M}^1(K) : \mu_j \overset{\ast}{\rightharpoonup}\mu\hspace{0.25cm}\text{for a sequence }(\mu_j)_j\subset\mathcal{M}^{lc}(K)\},\\
+            &=\{\mu\in\mathcal{M}^1(K) : h([\mu]) \leq \int h(A)~d\mu(A)\hspace{0.25cm}  \text{for all functions } h\in C(\mathbb{R}^{d\times d})\text{ which are convex along rank-one lines.}\}
+          \end{align*}\)
+          <p>and the rank-one convex hull</p>
+          \(K^{rc} := \{[\mu] : \mu \in \mathcal{M}^{rc}(K)\}.\)
+        </div>
+
+        <p>We will state the result for which these hulls are important.</p>
+        
+        <div class="lemma">
+          <p><b><i>Lemma:</i></b><br>
+          For \(K\in\mathbb{R}^{d\times d}\) a compact set,</p>
+          \(\hspace{2cm}K\subset K^{lc} \subset K ^{rc} \subset K^{qc} \subset K^{\ast\ast},\)
+          <p>where \(K^{\ast\ast}\) is the convexification (the set of all convex combinations) of \(K\).</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Hello</p>
+        </div>
+      </section>
+
+      <!--Convex Integration-->
+      <section>
+        <h2 id="ConvexInt">Convex Integration:</h2>
+        <p>This is a method for finding highly irregular solutions to PDEs. It is largely useful in studying non-linear problems such as those found in geometry, fluid mechanics [34, ..., 37], and material science [38, 39]. The rough idea is to first satisfy the boundary conditions before adding small oscillations to adjust approximate solutions closer to an exact solution.<br>
+          Originally, the technique was used in differential geometry to find \(C^1\) isometric embeddings for n-manifolds into \(\mathbb{R}^{n+1}\). This is the convex integration of Nash and Kuipers and is covered in my fluids project LINK.<br>
+          In this project, we shall discuss Gromov's convex integration which is useful for solving the differential inclusions found in material science. In particular, we shall discuss the exact solutions to \((DI~3)\)</p>
+        <h3>Gromov's Method</h3>
+        <div class="definition">
+          <p><b><i>Piecewise affine reduction:</i></b><br>
+            The open and bounded set \(G \subset \mathbb{R}^{d\times d}\) can be piecewise affinely reduced to the compact set
+            \(K \subset \mathbb{R}^{d\times d}\) if for all \(A \in G\) there exists a sequence of countably piecewise affine functions
+            \((\psi_j) \subset W^{1,\infty}_0 (\mathcal{B}_1; \mathbb{R}^d)\) such that</p>
+          <ol>
+            <li>\(A + \nabla\psi_j (x) \in G\) for all \(x \in \mathcal{B}_1\),</li>
+            <li>\(\int_{\mathcal{B}_1}\text{dist}(A+\nabla\psi_j(x), K)~dx \rightarrow 0\) as \(j\rightarrow\infty\)</li>
+          </ol>
+          <p>where \(\mathcal{B}_1\) denotes the unit ball centred at the origin.</p>
+        </div>
+        
+        <p>That is, roughly speaking, \(G\) can be piecewise affinely reduced to \(K\) if there is a sequence of oscillations
+        that take any point in \(G\) closer and closer to a point in \(K\).<br>
+        Furthermore, if \(G\) can be piecewise affinely reduced to \(K\), then \(A + \nabla\psi_j (x) \in G\) is a bounded sequence and so
+        has a subsequence which generates a gradient Young measure, \(\nu_x\). By (2), this measure has support in \(K\).
+        By the averaging principle for gradient Young measures, we obtain a measure \(\nu \in M^{qc}(K)\) whose barycenter is</p>
+        \(\hspace{2cm}\int\ Id ~ d\bar{\nu} = \frac{1}{|\mathcal{B}_1|}\int_{\mathcal{B}_1}\int Id~d\nu_x~dx
+        = \lim_{j\rightarrow\infty}\frac{1}{|\mathcal{B}_1|}\int_{\mathcal{B}_1} A + \nabla\psi_j(j)~dx = A\).
+        <p>Hence, \(G \subset K^{qc}\).</p>
+        <p>The following result solving the exact inclusions is due to the work of Gromov in 1986 [40],
+        Müller and Śverák in 1996 [41], and Sychev in 1998 [42].</p>
+
+        <div class="theorem">
+          <p><b><i>Abstract Convex Integration:</i></b><br>
+            Take a non-empty and compact set \(K \subset \mathbb{R}^{d\times d}\) and consider an open and bounded set
+            \(G \subset \mathbb{R}^{d\times d}\) which can be piecewise affinely reduced to \(K\). Assuming that \(v \in W^{1,\infty}(\Omega; \mathbb{R}^d)\)
+            is piecewise affine or that \(v \in C^1(\Omega; \mathbb{R}^d)\) and both with</p>
+            \(\hspace{2cm}\nabla v \in G \text{ a.e.}\)
+            <p>Then for all \(\epsilon > 0\), there exists a solution, \(u\), to the exact differential inclusion with fixed
+            boundary \(u|_{\partial\Omega} = v|_{\partial\Omega}\), such that \(\|u - v\|_{L^\infty} \leq \epsilon\).
+          </p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>We begin by showing that we can approximate \(v\) as piecewise affine. If \(v \in W^{1,\infty}\) is already piecewise affine,
+            then set \(v_1 := v\) and we are done. If \(v \in C^1\), we divide \(\Omega\) into \(Ω = N ∪ S∞ k=1 Ωk\) where Ωk ⊂ Ω is a sequence of open sets and |N | = 0.
+            In each Ωk, we approximate v with a finitely piecewise affine map ˜vk such that for ε > 0 given in the theorem, ∥v − ˜vk∥L∞ ≤ ε2−(k+1) and ˜vk|∂Ωk = v|∂Ωk .
+            As G is open and ∇v ∈ G, we may take the approximation to have gradient inside G. That is, ∇˜vk ∈ G. Continuously connecting ˜vk gives a single piecewise affine map
+            v1 := P∞ k=0 ˜vk1Ωk . In both cases, we have a piecewise affine map such that ∇v1 ∈ G a.e., v1|∂Ω = v|∂Ω, ∥v − v1∥L∞ ≤ 1 2ε. (∗)
+          We continue by using the piecewise affine reduction of G to K and by taking mollifications
+          of our piecewise affine map to construct a sequence (vj )j that converges strongly in W 1,1
+          to the solution of this differential inclusion. Let (ηδ)δ>0 be a family of mollifiers and take
+          δ1 ∈ (0, ε] such that
+          ∥∇v1 − ηδ1 ∗ ∇v1∥L1 ≤ 1
+          2.
+          We define vj ∈ W 1,∞(Ω; Rd) piecewise affine and δj inductively by use of the assumption
+          that G can be piecewise affinely reduced to K. Through this assumption,
+          (I) ∇vj ∈ G a.e., vj |∂Ω = v|∂Ω, ∥vj − vj−1∥L∞ ≤ 2−j δj−1
+          (II) R
+          Ω dist(∇vj (x), K) dx ≤ 2−j .
+          By taking 0 < δj ≤ δj−1, we obtain a sequence of mollifications that are successively closer
+          20
+          to their piecewise affine maps
+          ∥∇vj − ηδj ∗ ∇vj ∥L1 ≤ 2−j
+          where we consider vj to be continuously extended to Rd. For m ≥ j,
+          ∥vm − vj ∥L∞ ≤
+          m−1X
+          l=j
+          ∥vl+1 − vl∥L∞ ≤
+          m−1X
+          l=j
+          2−(l+1)δl ≤ δj
+          ∞X
+          l=j
+          2−(l+1) = 2−j δj ≤ 2−j ε
+          This shows that vj is a Cauchy sequence in the complete L∞-space. Hence vj has an
+          L∞-limit which we call u ∈ L∞(Ω; Rd) and which, by the above, satisfies
+          ∥u − v1∥L∞ ≤ 1
+          2ε and ∥u − vj ∥L∞ ≤ 2−j δj . (∗∗)
+          To show that our constructed sequence (vj )j converges strongly in W 1,1, we first note that
+          ∥∇ηδj ∥L1 ≤ C/δj for a constant C > 0. Then
+          ∥ηδj ∗ (∇u − ∇vj )∥L1 = ∥∇ηδj ∗ (u − vj )∥L1 ≤ ∥∇ηδj ∥L1 ∥u − vj ∥L∞ ≤ C
+          δj
+          δj
+          2j → 0,
+          and so
+          ∥∇u − ∇vj ∥L1 ≤ ∥∇u − ηδj ∗ ∇u∥L1 + ∥ηδj ∗ (∇u − ∇vj )∥L1 + ∥ηδj ∗ ∇vj − ∇vj ∥L1
+          → 0.
+          Thus, vj → u in W 1,1 and by taking a (unlabeled) subsequence, ∇vj → ∇u almost
+          everywhere. By (II), we have ∇u ∈ K almost everywhere. By (∗) and (∗∗) we have
+          ∥u − v∥L∞ ≤ ε, and from (I), we have u|∂Ω = v|∂Ω. We have found are solution.</p>
+        </div>
+
+        
+        <p>To obtain a less abstract result which is similar to that of Gromov [40], we must introduce
+        the lamination-convex hull and the in-approximation.</p>
+        
+        <h3>In-Approximations</h3>
+        <div class="definition">
+          <p><b><i>Lamination-Convex Hull & In-Approximation:</i></b><br>
+            The lamination-convex hull of an open and bounded set \(G\subset\mathbb{R}^{d\times d}\) is the countable union of the sequence \((G^{lc,i})_{i=0}^\infty\) which is defined inductively by including convex combinations of the previous set's rank-one connections. That is,</p>
+            \(\hspace{.75cm}\begin{cases}
+                G^{lc,0} = G,\\
+                G^{lc,i+1} = \{tA + (1-t)B: A,B\in G^{lc,i}, \text{rank}(A-B) \leq 1, t\in[0,1]\}
+            \end{cases}\)
+          <p>where, \(G^{lc} := \bigcup_{i=0}^\infty G^{lc,i}\) is the lamination-convex hull.<br>
+            Now consider a sequence of open and uniformly bounded sets \((G_k)_{k=0}^\infty\) in \(\mathbb{R}^{d\times d}\). This sequence is an in-approximation for a compact and non-empty set \(K\subset\mathbb{R}^{d\times d}\) if</p>
+          <ol>
+            <li>\(G_k \subset G^{lc}_{k+1}\) for all \(k\in\mathbb{N}\),</li>
+            <li>For \(A_k\in G_k\) and \(\lim_{k\rightarrow\infty}A_k = A\), we have \(A\in K\).</li>
+          </ol>
+        </div>
+        
+        <div class="theorem">
+          <p><b><i>In-Approximation Convex Integration</i></b><br>
+          Assume that \((G_k)_{k\in\mathbb{N}}\) is an in-approximation for the non-empty compact set \(K\subset\mathbb{R}^{d\times d}\). If \(v\in W^{1,\infty}(\Omega, \mathbb{R}^d)\) is piecewise affine or \(v\in C^1(\Omega, \mathbb{R}^d)\), and that</p>
+          \(\hspace{2cm}\nabla v \in G_\infty = \bigcup_{l=1}^\infty G_l \hspace{0.5cm}\text{ a.e.}\)
+          <p>Then for all \(\varepsilon > 0\), there exists a solution, \(u\), to the exact differential inclusion with fixed boundary \(u|_{\partial\Omega} = v|_{\partial\Omega}\), such that \(\|u-v\|_{L^\infty} \leq \varepsilon\).</p>
+        </div>
+
+        <p>The proof of this theorem requires showing that \(G^\infty\) can be piecewise affinely reduced to \(K\) and then applying abstract convex integration. To prove this, we require the lemma:</p>
+
+        <div class="lemma">
+          <p><b><i>Lemma:</i></b><br>
+            Consider \(G \subset \mathbb{R}^{d\times d}\) open and bounded, and \(v \in W^{1,\infty}(\Omega; \mathbb{R}^d)\) a piecewise
+            affine function such that \(\nabla v\) is almost everywhere in the lamination-convex hull, \(G^{lc}\).<br>
+            Then, for all \(\epsilon > 0\), there exists a piecewise affine function \(u \in W^{1,\infty}(\Omega; \mathbb{R}^d)\) with</p>
+            \(\hspace{2cm}\nabla u \in G, \text{ a.e. } u|_{\partial\Omega} = v|_{\partial\Omega},\)
+          <p>and \(\|u - v\|_{L^\infty} \leq \epsilon\).</p>
+        </div>
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Hello</p>
+        </div>
+
+        <p>In the interest of brevity, the proof of this lemma will be omitted. For this proof, check [13,
+        Page 244-247].</p>
+
+        <p>We now proceed with the proof of our In-Approximation Convex Integration.</p>
+
+        <button type="button" class="collapsible" style="background-color: rgba(230, 130, 10, 0.4); border: rgb(230, 130, 10) solid 1px;">proof:</button>
+        <div class="content">
+          <p>Our aim is to show that G∞ can be piecewise affinely reduced to K. Once we have
+          done this, the abstract theorem 5 gives the desired result. Without loss of generality, we
+          take A ∈ G1. By (1) of the definition of In-Approximation, A ∈ Glc
+          2 . Let n ∈ N and by
+          Lemma 4, there exists a piecewise affine map ψ(n)
+          2 ∈ W 1,∞(Ω; Rd) such that
+          A + ∇ψ(n)
+          2 ∈ G2 a.e., ψ(n)
+          2 |∂Ω = 0, and ∥ψ(n)
+          2 ∥L∞ ≤ 1
+          22−1n
+          22
+          Again by (1) of the definition of In-Approximation, A + ∇ψ(n)
+          2 ∈ Glc
+          3 and we continue to
+          find a sequence (ψ(n)
+          k )n
+          k=2 ⊂ W 1,∞
+          0 (Ω; Rd) of piecewise affine functions such that
+          A +
+          kX
+          i=2
+          ∇ψ(n)
+          i ∈ Gk ⊂ Glc
+          k a.e., and ∥ψ(n)
+          k ∥L∞ ≤ 1
+          2k−1n.
+          By defining the piecewise affine map
+          ψn :=
+          nX
+          i=2
+          ψ(n)
+          i ∈ W 1,∞(Ω; Rd),
+          we have
+          A + ∇ψn ∈ Gn ⊂ G∞ a.e., and ∥ψn∥L∞ ≤
+          nX
+          i=2
+          1
+          2i−1n = 1
+          n.
+          We have proven statement (1) of piecewise affine reduction. Now all that remains is to
+          prove
+          lim
+          n→∞
+          Z
+          Ω
+          dist(A + ∇ψn, K) dx = 0.
+          Since by definition of in-approximation the Gk are each uniformly bounded, dist(A +
+          ∇ψn, K) is uniformly bounded. By (2) of the definition of in-approximation, limn→∞(A +
+          ∇ψn) ∈ K. Thus, G∞ can be piecewise affinely reduced to K and we are done.</p>
+        </div>
+      </section>
+
+      <!--Multi-Well Inclusions-->
+      <section>
+        <h2 id="Multi">Multi-Well Inclusions:</h2>
+        <h3>The One-Well Problem</h3>
+        <h3>Two-Dimensional Two-Well Problems</h3>
+        <h3>A Three-Dimensional Result</h3>
+      </section>
+    </div>
+    <a class="up" href="#NavBar">\(\uparrow\)</a>
+    <footer class="footer">Contact me: nathangreen.nmg@gmail.com</footer>
+  </body>
+</html>
